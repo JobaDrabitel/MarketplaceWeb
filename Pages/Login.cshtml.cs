@@ -1,10 +1,13 @@
+using Marketplace_Web;
+using Marketplace_Web.Pages.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
 public class LoginModel : PageModel
 {
@@ -39,16 +42,32 @@ public class LoginModel : PageModel
         using (var httpClient = new HttpClient())
         {
             // «амените URL на ваше API-URL
-            var apiUrl = "http://localhost:8080/api/user/auth";
+            var apiUrl = "http://localhost:8080/api/user/getbyfields";
 
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
             var response = await httpClient.PostAsync(apiUrl, content);
 
-            if (response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode && response.Content!=null)
             {
-                // јвторизаци€ успешна
-                // «десь можно выполнить дополнительные действи€, например, перенаправить на другую страницу
-                return RedirectToPage("/Index");
+                var jsonResponse = await response.Content.ReadAsStringAsync();
+                jsonResponse = JsonFormatter.JSONFormatting(jsonResponse);
+                User? user;
+
+				try
+                {
+                    user = JsonSerializer.Deserialize<User>(jsonResponse);
+                }
+                catch { user = null; }
+				if (user != null)
+				{
+					HttpContext.Session.SetInt32("UserId", user.UserId);
+					HttpContext.Session.SetString("FirstName", user.FirstName);
+					HttpContext.Session.SetString("LastName", user.LastName);
+					HttpContext.Session.SetString("Email", user.Email);
+					if (user.ImageURL != null)
+						HttpContext.Session.SetString("ImageURL", user.ImageURL);
+				}
+				return RedirectToPage("/Index");
             }
             else
             {

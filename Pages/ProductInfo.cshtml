@@ -1,0 +1,47 @@
+﻿@page "{productId:int}"
+@model YourNamespace.Pages.ProductInfo.ProductInfoModel
+
+<h1>@Model.Product.Name</h1>
+<img src="@Model.Product.ImageURL" height="300" width="300" />
+<p>Description: @Model.Product.Description</p>
+<p>Price: $@Model.Product.Price</p>
+<p>Stock Quantity: @Model.Product.StockQuantity</p>
+<p>Category: @Model.Category</p>
+<p>Seller User ID: @Model.Product.SellerUserId</p>
+<p>Created At: @Model.Product.CreatedAt</p>
+<p>Updated At: @Model.Product.UpdatedAt</p>
+
+<h2>Reviews</h2>
+<!-- Форма для добавления отзыва с возможностью прикрепления фото -->
+<h2>Add a Review</h2>
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="rating">Rating:</label>
+        <input type="number" id="rating" name="rating" class="form-control" min="1" max="5" required>
+    </div>
+    <div class="form-group">
+        <label for="comment">Comment:</label>
+        <textarea id="comment" name="comment" class="form-control" rows="4" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="image">Attach Image:</label>
+        <input type="file" id="image" name="image" accept="image/*">
+    </div>
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>
+
+    @foreach (var review in Model.Reviews)
+    {
+        <div class="comment">
+            <div class="comment-user">
+                <img src="@Model.Users[Model.Reviews.IndexOf(review)].ImageURL" alt="User Image" class="user-image" height="50" width="50">
+                <span class="user-name">@Model.Users[Model.Reviews.IndexOf(review)].FirstName @Model.Users[Model.Reviews.IndexOf(review)].LastName</span>
+                <span class="star-rating">@review.Rating ⭐</span>
+            </div>
+            <div class="comment-text">
+                <p>@review.Comment</p>
+            </div>
+        </div>
+    }
+
+
