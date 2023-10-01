@@ -4,12 +4,12 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
 using System.Text.Json;
 
-namespace YourNamespace.Pages.ProductInfo
+namespace Marketplace_Web.Pages
 {
 	public class ProductInfoModel : PageModel
     {
         private readonly IHttpClientFactory _clientFactory;
-
+        public User user;
         public ProductInfoModel(IHttpClientFactory clientFactory)
         {
             _clientFactory = clientFactory;
@@ -23,7 +23,8 @@ namespace YourNamespace.Pages.ProductInfo
 
         public async Task<IActionResult> OnGetAsync(int productId)
         {
-            Users = new List<User>();
+			user = UserSessions.GetUser(HttpContext.Session);
+			Users = new List<User>();
             // Здесь мы отправляем GET-запрос на API, чтобы получить информацию о продукте
             var apiUrl = $"http://localhost:8080/api/product/getbyid/{productId}"; // Замените на свой URL
             var client = _clientFactory.CreateClient();
@@ -42,12 +43,18 @@ namespace YourNamespace.Pages.ProductInfo
 
             var categoryRespose = await client.GetAsync($"http://localhost:8080/api/category/getbyid/{Product.CategoryId}");
             var categoryJson = await categoryRespose.Content.ReadAsStringAsync();
-            Category = JsonSerializer.Deserialize<Category>(categoryJson).Name;
+            try
+            {
+                Category = JsonSerializer.Deserialize<Category>(categoryJson).Name;
+
+
+            
             var sellerResponse = await client.GetAsync($"http://localhost:8080/api/user/getbyid/{Product.SellerUserId}");
             var sellerJson = await sellerResponse.Content.ReadAsStringAsync();
-            Seller = JsonSerializer.Deserialize<User>(sellerJson);
-            // Теперь отправляем POST-запрос для получения отзывов
-            var reviewRequest = new { ProductId = productId };
+            Seller = JsonSerializer.Deserialize<User>(sellerJson); }
+			catch (Exception ex) { Category = "Нет"; Seller  = null; }
+			// Теперь отправляем POST-запрос для получения отзывов
+			var reviewRequest = new { ProductId = productId };
             var reviewRequestJson = JsonSerializer.Serialize(reviewRequest);
 
             var reviewResponse = await client.PostAsync($"http://localhost:8080/api/review/getbyfields", new StringContent(reviewRequestJson, System.Text.Encoding.Default, "application/json")); // Замените на свой URL
@@ -67,7 +74,7 @@ namespace YourNamespace.Pages.ProductInfo
                 Users.Add(JsonSerializer.Deserialize<User>(userJson));
             }
 
-            return Page();
+            return this.Page();
 
         }
         public async Task<IActionResult> OnPostAsync(int productId, int rating, string comment, IFormFile? image)

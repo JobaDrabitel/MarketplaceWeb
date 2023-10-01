@@ -4,16 +4,17 @@ using Marketplace_Web.Pages.Models;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Marketplace_Web.Pages
 {
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        public User user;
-
-		public IEnumerable<Category> Categories { get; private set; }
-		public IEnumerable<Product> Products { get; private set; }
+        public static  User user;
+		private readonly IMemoryCache _cache;
+		public static  IEnumerable<Category> Categories { get; private set; }
+		public static  IEnumerable<Product> Products { get; private set; }
 		public int Rating { get; private set; }
 		public IndexModel(ILogger<IndexModel> logger)
         {
@@ -57,6 +58,34 @@ namespace Marketplace_Web.Pages
 				return products;
 			}
 		}
+		public async Task<IActionResult> OnPostAddToCartAsync(int productId)
+		{
+			var cart = _cache.Get<Dictionary<int, int>>("Cart") ?? new Dictionary<int, int>();
+			if (cart.ContainsKey(productId))
+			{
+				cart[productId]++;
+			}
+			else
+			{
+				cart[productId] = 1;
+			}
+			_cache.Set("Cart", cart);
+			return RedirectToPage("/Index"); 
+		}
+		public IActionResult OnGetLogout(string returnUrl)
+		{
+			// Очищаем сессию и устанавливаем isAuthenticated в false
+			HttpContext.Session.Clear();
+			user = null;
 
+			// Проверяем, был ли предоставлен returnUrl, и перенаправляем на него, если да.
+			if (!string.IsNullOrEmpty(returnUrl))
+			{
+				return Redirect(returnUrl);
+			}
+
+			// Если returnUrl не был предоставлен, перенаправляем пользователя на другую страницу после выхода.
+			return RedirectToPage("/index"); // Замените 'ДругаяСтраница' на нужный URL
+		}
 	}
 }

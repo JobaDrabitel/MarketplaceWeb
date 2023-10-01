@@ -11,10 +11,11 @@ namespace Marketplace_Web.Pages
         public List<Wishlist>? Wishlist { get; set; } = new List<Wishlist>();
         public List<Product>? Products { get; set; } = new List<Product>();
 
-        public async Task<IActionResult> OnPostAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
-
-            using (var httpClient = new HttpClient())
+			var action = Request.Query["action"].ToString();
+			if (action == "load")
+				using (var httpClient = new HttpClient())
             {
                 var apiUrl = "http://localhost:8080/api/wishlist/getbyfields";
                 var userId = HttpContext.Session.GetInt32("UserId");

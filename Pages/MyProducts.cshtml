@@ -3,38 +3,172 @@
 @{
     ViewData["Title"] = "My Products";
 }
-
+<head>
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/slick.css" />
+	<link rel="stylesheet" href="css/slick-theme.css" />
+	<link rel="stylesheet" href="css/nouislider.min.css" />
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/site.css" />
+</head>
 <!-- Стили для структуры продуктов -->
-<style>
-    .products-container {
-        display: flex;
-        flex-wrap: wrap;
-    }
 
-    .product-item {
-        flex: 0 0 calc(20% - 20px); /* Распределение на 5 колонок в строке с отступами */
-        margin: 10px;
-        border: 1px solid #ddd;
-        padding: 15px;
-        background-color: #fff;
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-    }
+<body>
+	<!-- HEADER -->
+	<header>
+		<!-- TOP HEADER -->
+		<div id="top-header">
+			<div class="container">
+				<ul class="header-links pull-left">
+					<li><a href="#"><i class="fa fa-phone"></i> +021-95-51-84</a></li>
+					<li><a href="#"><i class="fa fa-envelope-o"></i> email@email.com</a></li>
+					<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
+				</ul>
+				@{
+					var isAuthenticated = false;
+					var user = IndexModel.user;
+					if (user!= null)
+						if (user.FirstName != null)
+							isAuthenticated = true;
 
-    .product-title {
-        font-size: 20px;
-        font-weight: bold;
-    }
+				}
 
-    .product-image img {
-        max-width: 100%; /* Ограничьте максимальную ширину изображения по контейнеру */
-        height: auto;
-    }
+				<ul class="header-links pull-right">
+					<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+					@if (isAuthenticated)
+					{
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								<i class="fa fa-user-o"></i> @user.FirstName <b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu" style="background: black;">
+								<!-- Добавляем стиль color: black; -->
+								<li><a href="/Profile/{@user.UserId}"><i class="fa fa-user"></i> Профиль</a></li>
+								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> MyProducts</a></li>
+								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
+							</ul>
+						</li>
+					}
+					else
+					{
+						<li><a href="/Login"><i class="fa fa-user-o"></i> Login</a></li>
+					}
+				</ul>
 
-    .product-info p {
-        margin: 10px 0;
-    }
-</style>
 
+
+			</div>
+		</div>
+		<!-- /TOP HEADER -->
+		<!-- MAIN HEADER -->
+		<div id="header">
+			<!-- container -->
+			<div class="container">
+				<!-- row -->
+				<div class="row">
+					<!-- LOGO -->
+					<div class="col-md-3">
+						<div class="header-logo">
+							<a href="./Index" class="logo">
+								<img src="./img/logo.png" alt="">
+							</a>
+						</div>
+					</div>
+					<!-- /LOGO -->
+					<!-- SEARCH BAR -->
+					<div class="col-md-6">
+						<div class="header-search">
+							<form method="post" asp-page="/ProductSearch">
+								<select class="input-select" name="categoryId">
+									<option value="0">Категория</option>
+									@foreach (var category in IndexModel.Categories)
+									{
+										<option value="@category.CategoryId">@category.Name</option>
+									}
+								</select>
+								<input class="input" name="searchTerm" placeholder="Search here">
+								<button type="submit" class="search-btn">Search</button>
+							</form>
+						</div>
+
+					</div>
+					<!-- /SEARCH BAR -->
+					<!-- ACCOUNT -->
+					<div class="col-md-3 clearfix">
+						<div class="header-ctn">
+							<!-- Wishlist -->
+							<div>
+								<a href="/Wishlist?action=load">
+									<i class="fa fa-heart-o"></i>
+									<span>Your Wishlist</span>
+									<div class="qty">2</div>
+								</a>
+							</div>
+							<!-- /Wishlist -->
+							<!-- Cart -->
+							<div class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+									<i class="fa fa-shopping-cart"></i>
+									<span>Your Cart</span>
+									<div class="qty">3</div>
+								</a>
+								<div class="cart-dropdown">
+									<div class="cart-list">
+										<div class="product-widget">
+											<div class="product-img">
+												<img src="./img/product01.png" alt="">
+											</div>
+											<div class="product-body">
+												<h3 class="product-name"><a href="#">product name goes here</a></h3>
+												<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
+											</div>
+											<button class="delete"><i class="fa fa-close"></i></button>
+										</div>
+
+										<div class="product-widget">
+											<div class="product-img">
+												<img src="./img/product02.png" alt="">
+											</div>
+											<div class="product-body">
+												<h3 class="product-name"><a href="#">product name goes here</a></h3>
+												<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
+											</div>
+											<button class="delete"><i class="fa fa-close"></i></button>
+										</div>
+									</div>
+									<div class="cart-summary">
+										<small>3 Item(s) selected</small>
+										<h5>SUBTOTAL: $2940.00</h5>
+									</div>
+									<div class="cart-btns">
+										<a href="#">View Cart</a>
+										<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
+									</div>
+								</div>
+							</div>
+							<!-- /Cart -->
+							<!-- Menu Toogle -->
+							<div class="menu-toggle">
+								<a href="#">
+									<i class="fa fa-bars"></i>
+									<span>Menu</span>
+								</a>
+							</div>
+							<!-- /Menu Toogle -->
+						</div>
+					</div>
+					<!-- /ACCOUNT -->
+				</div>
+				<!-- row -->
+			</div>
+			<!-- container -->
+		</div>
+		<!-- /MAIN HEADER -->
+	</header>
+</body>
+<!-- /HEADER -->
 <div class="col-md-12">
     <div class="section-title">
         <h3 class="title">My Products</h3>
@@ -49,32 +183,32 @@
 <div class="col-md-12 products-container">
     @foreach (var product in Model.Products)
     {
-        <div class="product-item">
-            <div class="product-title">
-                <h4>@product.Name</h4>
-            </div>
-            <div class="product-image">
-                <a href="/ProductInfo/@product.ProductId">
-                    <!-- Добавляем ссылку на ProductInfo с параметром ProductId -->
-                    <img src="@product.ImageURL" alt="@product.Name"></img>
-                </a>
-            </div>
-            <div class="product-info">
-                <p>Description: @product.Description</p>
-                <p>Price: $@product.Price</p>
-                <p>Stock Quantity: @product.StockQuantity</p>
-                <p>Category ID: @product.CategoryId</p>
-                <p>Seller User ID: @product.SellerUserId</p>
-                <p>Created At: @product.CreatedAt</p>
-                <p>Updated At: @product.UpdatedAt</p>
-            </div>
-        </div>
+		<div class="col-md-2">
+			<!-- Оборачиваем весь товар в ссылку -->
+			<a href="/ProductInfo/@product.ProductId" class="product-link">
+				<div class="product">
+					<div class="product-img">
+						<img src="@product.ImageURL" alt="@product.Name" width="100" height="200">
+						<div class="product-label">
+							<span class="new">NEW</span>
+						</div>
+					</div>
+					<div class="product-body">
+						<p class="product-category">@product.Category</p>
+						<h3 class="product-name"><a href="#">@product.Name</a></h3>
+						<h4 class="product-price">$@product.Price</h4>
+
+						<div class="product-btns">
+							<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
+							<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
+						</div>
+					</div>
+					<div class="add-to-cart">
+						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+					</div>
+				</div>
+			</a>
+		</div>
     }
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/slick.min.js"></script>
-    <script src="js/nouislider.min.js"></script>
-    <script src="js/jquery.zoom.min.js"></script>
-    <script src="js/main.js"></script>
 </div>
 

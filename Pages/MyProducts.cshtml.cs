@@ -34,13 +34,11 @@ namespace Marketplace_Web.Pages
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync();
                     var products = JsonSerializer.Deserialize<List<Product>>(jsonResponse);
-
-                    // Передайте список продуктов в представление
                     Products = products;
                 }
                 else
                 {
-                    // Обработайте ошибку
+                    throw new Exception();
                 }
             }
 
