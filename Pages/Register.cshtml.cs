@@ -23,7 +23,7 @@ public class RegisterModel : PageModel
 	[DisplayName("Phone")]
 	[Required(ErrorMessage = "Поле Phone обязательно")]
 	[Phone(ErrorMessage = "Phone имеет неправильный формат")]
-	[MaxLength(15, ErrorMessage = "Максимальная длина Phone может быть 15 символов")]
+	[MaxLength(11, ErrorMessage = "Максимальная длина Phone может быть 11 символов")]
 	public string Phone { get; set; }
 	[BindProperty]
 	[DisplayName("Пароль")]

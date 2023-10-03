@@ -18,7 +18,8 @@ namespace Marketplace_Web.Pages
             {
                 var apiUrl = "http://localhost:8080/api/wishlist/getbyfields";
                 var userId = HttpContext.Session.GetInt32("UserId");
-
+				if (userId == null)
+					return Page();
                 // Подготовьте JSON-запрос для API
                 var requestData = new
                 {
@@ -54,6 +55,91 @@ namespace Marketplace_Web.Pages
 
             return Page();
         }
+		private async Task<List<Product>> GetSelectedProducts()
+		{
+			await OnGetAsync();
+			return Products;
+		}
+		public async Task<IActionResult> OnPostPlaceOrderAsync()
+		{
+			// Получите данные из поля Wishlist или любого другого места, где хранятся выбранные товары
+			List<Product> selectedProducts = await GetSelectedProducts();
+			decimal? sum = 0;
+			foreach (var product in selectedProducts)
+				sum += product.Price;
+			if (sum == 0)
+			{
+				return RedirectToPage("/Index");
+			}
+			List<OrderItem> orderItems = new List<OrderItem>();
 
-    }
-}
+			Order order = new Order
+			{
+				UserId = HttpContext.Session.GetInt32("UserId"),
+				OrderDate = DateTime.Now,
+				TotalAmount = sum
+			};
+			
+			// Отправьте заказ и элементы заказа на ваше API
+			var apiUrl = "http://localhost:8080/api/order/create";
+			var jsonData = JsonSerializer.Serialize(order);
+
+			using (var httpClient = new HttpClient())
+			{
+				var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+				var response = await httpClient.PutAsync(apiUrl, content);
+
+				if (response.IsSuccessStatusCode)
+				{
+					apiUrl = "http://localhost:8080/api/order/getbyfields";
+					response = await httpClient.PostAsync(apiUrl, content);
+					var jsonResponse = await response.Content.ReadAsStringAsync();
+					var newOrder = JsonSerializer.Deserialize<List<Order>>(jsonResponse);
+					foreach (var product in selectedProducts)
+					{
+						// Создайте элемент заказа для каждого выбранного товара
+						OrderItem orderItem = new OrderItem
+						{
+							ProductId = product.ProductId,
+							Quantity = 1, // Установите количество товара в заказе
+							Price = product.Price,
+							OrderId = newOrder[0].OrderId
+						};
+						jsonData = JsonSerializer.Serialize(orderItem);
+						content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+						apiUrl = "http://localhost:8080/api/orderitem/create";
+						response = await httpClient.PutAsync(apiUrl, content);
+					}
+						if (response.IsSuccessStatusCode)
+						{
+							Wishlist wishlist = new Wishlist
+							{
+								UserId = HttpContext.Session.GetInt32("UserId"),
+							};
+							jsonData = JsonSerializer.Serialize(wishlist);
+							content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+							apiUrl = "http://localhost:8080/api/wishlist/getbyfields";
+							response = await httpClient.PostAsync(apiUrl, content);
+							jsonResponse = await response.Content.ReadAsStringAsync();
+							var newWishlists = JsonSerializer.Deserialize<List<Wishlist>>(jsonResponse);
+							foreach (var newWishlist in newWishlists) 
+							{
+								apiUrl = $"http://localhost:8080/api/wishlist/deletebyid/{newWishlist.WishlistId}";
+								response = await httpClient.DeleteAsync(apiUrl);
+							}
+							return RedirectToPage("/Index");
+						}
+						else
+						{
+							// Обработайте ошибку, например, показав сообщение об ошибке пользователю
+							ModelState.AddModelError(string.Empty, "Произошла ошибка при оформлении заказа.");
+							return Page();
+						}
+					}
+					return RedirectToPage("/OrderSuccess");
+				}
+				
+			}
+		}
+	}
+

@@ -1,7 +1,7 @@
 ﻿@page
-@model MyProductsModel
+@model MyOrdersModel
 @{
-    ViewData["Title"] = "My Products";
+	ViewData["Title"] = "My Products";
 }
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -29,14 +29,14 @@
 				@{
 					var isAuthenticated = false;
 					var user = IndexModel.user;
-					if (user!= null)
+					if (user != null)
 						if (user.FirstName != null)
 							isAuthenticated = true;
 
 				}
 
 				<ul class="header-links pull-right">
-					
+
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -46,8 +46,7 @@
 							<ul class="dropdown-menu" style="background: black;">
 								<!-- Добавляем стиль color: black; -->
 								<li><a href="/Profile/{@user.UserId}"><i class="fa fa-user"></i> Профиль</a></li>
-								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> Мои товары</a></li>
-								<li><a href="/MyOrders"><i class="fa fa-shopping-bag"></i> Мои заказы</a></li>
+								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> MyProducts</a></li>
 								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
 							</ul>
 						</li>
@@ -171,33 +170,32 @@
 </body>
 <!-- /HEADER -->
 <div class="col-md-12">
-    <div class="section-title">
-        <h3 class="title">My Products</h3>
-        <div class="section-nav">
-            <ul class="section-tab-nav tab-nav">
+	<div class="section-title">
+		<h3 class="title">My Products</h3>
+		<div class="section-nav">
+			<ul class="section-tab-nav tab-nav">
 				<a asp-page="/CreateProduct" class="btn btn-primary">Create Product</a>
-            </ul>
-        </div>
-    </div>
+			</ul>
+		</div>
+	</div>
 </div>
 
 <div class="col-md-12 products-container">
-    @foreach (var product in Model.Products)
-    {
+	@foreach (var order in Model.Orders)
+	{
 		<div class="col-md-2">
 			<!-- Оборачиваем весь товар в ссылку -->
-			<a href="/ProductInfo/@product.ProductId" class="product-link">
+			<a href="/ProductInfo/@order.OrderId" class="product-link">
 				<div class="product">
-					<div class="product-img">
-						<img src="@product.ImageUrl" alt="@product.Name" width="100" height="200">
+					<div class="product-img">		
 						<div class="product-label">
 							<span class="new">NEW</span>
 						</div>
 					</div>
 					<div class="product-body">
-						<p class="product-category">@product.Category</p>
-						<h3 class="product-name"><a href="#">@product.Name</a></h3>
-						<h4 class="product-price">$@product.Price</h4>
+						<p class="product-category"> Номер заказа: @order.OrderId</p>
+						<h3 class="product-name"><a href="#">Дата заказа: @order.OrderDate</a></h3>
+						<h4 class="product-price">$@order.TotalAmount</h4>
 
 						<div class="product-btns">
 							<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
@@ -210,6 +208,6 @@
 				</div>
 			</a>
 		</div>
-    }
+	}
 </div>
 
