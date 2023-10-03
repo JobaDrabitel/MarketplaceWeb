@@ -23,7 +23,7 @@ public class RegisterModel : PageModel
 	[DisplayName("Phone")]
 	[Required(ErrorMessage = "Поле Phone обязательно")]
 	[Phone(ErrorMessage = "Phone имеет неправильный формат")]
-	[MaxLength(11, ErrorMessage = "Максимальная длина Phone может быть 11 символов")]
+	[StringLength(11, ErrorMessage = "Номер должен состоять из 11 символов")]
 	public string Phone { get; set; }
 	[BindProperty]
 	[DisplayName("Пароль")]
@@ -52,7 +52,8 @@ public class RegisterModel : PageModel
             LastName,
             Email,
             PasswordHash = Password,
-            RoleId = 2
+            RoleId = 2,
+            Phone,
         };
 
         var jsonData = JsonSerializer.Serialize(regData);

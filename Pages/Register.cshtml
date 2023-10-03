@@ -45,7 +45,7 @@
 							</a>
 							<ul class="dropdown-menu" style="background: black;">
 								<!-- Добавляем стиль color: black; -->
-								<li><a href="/Profile/{@user.UserId}"><i class="fa fa-user"></i> Профиль</a></li>
+								<li><a href="/Profile"><i class="fa fa-user"></i> Профиль</a></li>
 								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> MyProducts</a></li>
 								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
 							</ul>
@@ -103,17 +103,12 @@
 								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Cart</span>
-									<div class="qty">2</div>
+									
 								</a>
 							</div>
 							<!-- /cart -->
 							<!-- Menu Toogle -->
-							<div class="menu-toggle">
-								<a href="#">
-									<i class="fa fa-bars"></i>
-									<span>Menu</span>
-								</a>
-							</div>
+							
 							<!-- /Menu Toogle -->
 						</div>
 					</div>
@@ -180,3 +175,9 @@
     <button type="submit" class="btn btn-primary">Register</button>
 </form>
 </div>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>

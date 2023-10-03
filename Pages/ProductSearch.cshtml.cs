@@ -63,12 +63,11 @@ namespace Marketplace_Web.Pages
 					var productsJson = await response.Content.ReadAsStringAsync();
 					var products = JsonSerializer.Deserialize<List<Product>>(productsJson);
 					if (products != null)
-						
-							foreach (var product in products)
-							{
-								if (product.CategoryId == Category)
-									Products.Add(product);
-							}
+						foreach (var product in products)
+						{
+							if (product.CategoryId == Category)
+								Products.Add(product);	
+						}
 				}
 				else
 				{

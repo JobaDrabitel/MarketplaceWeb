@@ -41,7 +41,7 @@ namespace Marketplace_Web {
 			}
 
 			// Создайте объект для отправки на API
-			var productData = new
+			Product productData = new Product
 			{
 				Name = Product.Name,
 				Description = Product.Description,
@@ -49,7 +49,9 @@ namespace Marketplace_Web {
 				Price = Product.Price,
 				ImageUrl = Product.ImageUrl,
 				StockQuantity = Product.StockQuantity,
-				SellerUserId = sellerUserId.Value
+				SellerUserId = sellerUserId.Value,
+				CreatedAt = DateTime.Now,
+				UpdatedAt = DateTime.Now,
 			};
 
 			// Сериализуйте данные в JSON

@@ -45,7 +45,7 @@
 							</a>
 							<ul class="dropdown-menu" style="background: black;">
 								<!-- Добавляем стиль color: black; -->
-								<li><a href="/Profile/{@user.UserId}"><i class="fa fa-user"></i> Профиль</a></li>
+								<li><a href="/Profile"><i class="fa fa-user"></i> Профиль</a></li>
 								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> MyProducts</a></li>
 								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
 							</ul>
@@ -100,62 +100,15 @@
 						<div class="header-ctn">
 							<!-- Cart -->
 							<div>
-								<a href="/Wishlist?action=load">
-									<i class="fa fa-heart-o"></i>
-									<span>Your Wishlist</span>
-									<div class="qty">2</div>
-								</a>
-							</div>
-							<!-- /Wishlist -->
-							<!-- Cart -->
-							<div class="dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
-									<span>Your Cart</span>
-									<div class="qty">3</div>
+									<span>Cart</span>
+									
 								</a>
-								<div class="cart-dropdown">
-									<div class="cart-list">
-										<div class="product-widget">
-											<div class="product-img">
-												<img src="./img/product01.png" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-name"><a href="#">product name goes here</a></h3>
-												<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-											</div>
-											<button class="delete"><i class="fa fa-close"></i></button>
-										</div>
-
-										<div class="product-widget">
-											<div class="product-img">
-												<img src="./img/product02.png" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-name"><a href="#">product name goes here</a></h3>
-												<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-											</div>
-											<button class="delete"><i class="fa fa-close"></i></button>
-										</div>
-									</div>
-									<div class="cart-summary">
-										<small>3 Item(s) selected</small>
-										<h5>SUBTOTAL: $2940.00</h5>
-									</div>
-									<div class="cart-btns">
-										<a href="#">View Cart</a>
-										<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-									</div>
-								</div>
 							</div>
-							<!-- /Cart -->
+							<!-- /cart -->
 							<!-- Menu Toogle -->
-							<div class="menu-toggle">
-								<a href="#">
-									<i class="fa fa-bars"></i>
-									<span>Menu</span>
-								</a>
-							</div>
+							
 							<!-- /Menu Toogle -->
 						</div>
 					</div>
@@ -174,12 +127,12 @@
         <h3 class="title">My Products</h3>
         <div class="section-nav">
             <ul class="section-tab-nav tab-nav">
-				<a asp-page="/CreateProduct" class="btn btn-primary">Create Product</a>
+				<a asp-page="/CreateProduct" class="btn btn-primary">Создать продукт</a>
             </ul>
         </div>
 		<div class="section-nav">
 			<ul class="section-tab-nav tab-nav">
-				<a asp-page="/MyOrders" class="btn btn-primary">Create Product</a>
+				<a asp-page="/MyOrders" class="btn btn-primary">Мои заказы</a>
 			</ul>
 		</div>
     </div>
@@ -203,17 +156,16 @@
 						<h3 class="product-name"><a href="#">@product.Name</a></h3>
 						<h4 class="product-price">$@product.Price</h4>
 
-						<div class="product-btns">
-							<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-							<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-						</div>
-					</div>
-					<div class="add-to-cart">
-						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
 					</div>
 				</div>
 			</a>
 		</div>
     }
 </div>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>
 
