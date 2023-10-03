@@ -1,5 +1,5 @@
 using Marketplace_Web;
-using Marketplace_Web.Pages.Models;
+using Marketplace_Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -64,8 +64,8 @@ public class LoginModel : PageModel
 					HttpContext.Session.SetString("FirstName", user.FirstName);
 					HttpContext.Session.SetString("LastName", user.LastName);
 					HttpContext.Session.SetString("Email", user.Email);
-					if (user.ImageURL != null)
-						HttpContext.Session.SetString("ImageURL", user.ImageURL);
+					if (user.ImageUrl != null)
+						HttpContext.Session.SetString("ImageUrl", user.ImageUrl);
 				}
 				return RedirectToPage("/Index");
             }

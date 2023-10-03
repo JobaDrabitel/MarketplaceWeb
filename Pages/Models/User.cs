@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Marketplace_Web.Pages.Models;
+namespace Marketplace_Web.Models;
 
 public partial class User
 {
@@ -13,10 +13,13 @@ public partial class User
 
     public string? Email { get; set; }
 
-    public string? ImageURL { get; set; }
     public string? PasswordHash { get; set; }
 
     public int? RoleId { get; set; }
+
+    public string? ImageUrl { get; set; }
+
+    public string? Phone { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 

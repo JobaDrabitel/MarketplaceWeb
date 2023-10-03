@@ -1,4 +1,4 @@
-using Marketplace_Web.Pages.Models;
+using Marketplace_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -27,7 +27,13 @@ namespace Marketplace_Web.Pages
                     if (String.IsNullOrEmpty(searchTerm))
 						foreach (var product in products)
 						{
-							if ( product.CategoryId == categoryId)
+							if (product.CategoryId == categoryId)
+								Products.Add(product);
+						}
+                    else if (categoryId == 0)
+						foreach (var product in products)
+						{
+							if (product.Name.ToUpper().Contains(searchTerm.ToUpper()))
 								Products.Add(product);
 						}
                     else

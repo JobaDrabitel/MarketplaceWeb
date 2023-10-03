@@ -129,7 +129,13 @@ textarea.input {
 }
 
 /*-- Number input --*/
-
+input[type="text"],
+input[type="number"],
+textarea,
+select {
+    max-width: 30%; /* Это ограничит максимальную ширину элементов ввода до 100% от родительского контейнера */
+    width: 30%; /* Это сделает элементы ввода 100% шириной относительно их родительского контейнера */
+}
 .input-number {
   position: relative;
 }

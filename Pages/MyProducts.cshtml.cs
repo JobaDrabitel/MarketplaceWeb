@@ -1,4 +1,4 @@
-using Marketplace_Web.Pages.Models;
+using Marketplace_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;

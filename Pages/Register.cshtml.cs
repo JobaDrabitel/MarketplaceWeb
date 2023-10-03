@@ -13,19 +13,26 @@ public class RegisterModel : PageModel
     [BindProperty]
     public string LastName { get; set; }
 
+	[BindProperty]
 	[DisplayName("Email")]
 	[Required(ErrorMessage = "Поле Email обязательно")]
 	[EmailAddress(ErrorMessage = "Email имеет неправильный формат")]
 	[MaxLength(32, ErrorMessage = "Максимальная длина email может быть 32 символа")]
 	public string Email { get; set; }
-
+	[BindProperty]
+	[DisplayName("Phone")]
+	[Required(ErrorMessage = "Поле Phone обязательно")]
+	[Phone(ErrorMessage = "Phone имеет неправильный формат")]
+	[MaxLength(15, ErrorMessage = "Максимальная длина Phone может быть 15 символов")]
+	public string Phone { get; set; }
+	[BindProperty]
 	[DisplayName("Пароль")]
 	[Required(ErrorMessage = "Поле Пароль обязательно")]
 	[MinLength(8, ErrorMessage = "Минимальная длина пароля должна быть 8 символов")]
 	[MaxLength(32, ErrorMessage = "Максимальная длина пароля может быть 32 символа")]
 	[DataType(DataType.Password)]
 	public string Password { get; set; } = null!;
-
+	[BindProperty]
 	[DisplayName("Подтверждение пароля")]
 	[Required(ErrorMessage = "Поле Подтверждение пароля обязательно")]
 	[Compare(nameof(Password), ErrorMessage = "Подтверждение пароля должно совпадать с паролем")]
@@ -41,10 +48,11 @@ public class RegisterModel : PageModel
 
         var regData = new
         {
-            FirstName = FirstName,
-            LastName = LastName,
-            Email = Email,
-            PasswordHash = Password
+            FirstName,
+            LastName,
+            Email,
+            PasswordHash = Password,
+            RoleId = 2
         };
 
         var jsonData = JsonSerializer.Serialize(regData);
@@ -66,12 +74,11 @@ public class RegisterModel : PageModel
                 HttpContext.Session.SetString("Email", Email);
                 return RedirectToPage("/Index");
             }
-            else
+            else if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
             {
-                // Обработайте ошибку
-                // ...
-                return Page();
+				ModelState.AddModelError(string.Empty, "Этот email уже используется.");
             }
+             return Page(); 
         }
     }
 }

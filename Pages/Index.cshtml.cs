@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Marketplace_Web.Pages.Models;
+using Marketplace_Web.Models;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;

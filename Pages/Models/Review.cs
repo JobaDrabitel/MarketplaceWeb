@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Marketplace_Web.Pages.Models;
+namespace Marketplace_Web.Models;
 
 public partial class Review
 {
@@ -16,6 +16,8 @@ public partial class Review
     public string? Comment { get; set; }
 
     public DateTime? CreatedAt { get; set; }
+
+    public string? ImageUrl { get; set; }
 
     public virtual Product? Product { get; set; }
 

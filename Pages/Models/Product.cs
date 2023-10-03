@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Marketplace_Web.Pages.Models;
+namespace Marketplace_Web.Models;
 
 public partial class Product
 {
@@ -23,7 +23,8 @@ public partial class Product
 
     public DateTime? UpdatedAt { get; set; }
 
-    public string? ImageURL { get; set; }
+    public string? ImageUrl { get; set; }
+
     public virtual Category? Category { get; set; }
 
     public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();

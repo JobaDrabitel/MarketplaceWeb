@@ -1,4 +1,4 @@
-﻿using Marketplace_Web.Pages.Models;
+﻿using Marketplace_Web.Models;
 
 namespace Marketplace_Web
 {
@@ -10,7 +10,7 @@ namespace Marketplace_Web
 			session.SetString("FirstName", user.FirstName);
 			session.SetString("LastName", user.LastName);
 			session.SetString("Email", user.Email);
-			session.SetString("ImageURL", user.ImageURL);
+			session.SetString("ImageUrl", user.ImageUrl);
 		}
 
 		public static User GetUser(this ISession session)
@@ -19,7 +19,7 @@ namespace Marketplace_Web
 			var firstName = session.GetString("FirstName");
 			var lastName = session.GetString("LastName");
 			var email = session.GetString("Email");
-			var imageUrl = session.GetString("ImageURL");
+			var ImageUrl = session.GetString("ImageUrl");
 
 			return new User
 			{
@@ -27,7 +27,7 @@ namespace Marketplace_Web
 				FirstName = firstName,
 				LastName = lastName,
 				Email = email,
-				ImageURL = imageUrl
+				ImageUrl = ImageUrl
 			};
 		}
 	}

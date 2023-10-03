@@ -1,4 +1,4 @@
-﻿using Marketplace_Web.Pages.Models;
+﻿using Marketplace_Web.Models;
 using System.Text.Json;
 using System.Net.Http;
 
