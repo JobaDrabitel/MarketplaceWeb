@@ -1,5 +1,7 @@
 ﻿@page
-@model AdminProductsModel;
+@model Marketplace_Web.Pages.ModeratorModel
+@{
+}
 <head>
 	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -118,54 +120,18 @@
 		<!-- /MAIN HEADER -->
 	</header>
 
-	<h2>Delete Item by ID</h2>
-
-	<form method="post">
-		<div class="form-group">
-			<label for="itemId">Item ID:</label>
-			<input type="text" class="form-control" id="itemId" name="itemId" required>
-		</div>
-		<button type="submit" class="btn btn-danger">Delete</button>
-	</form>
-
-	@if (Model.DeleteResult != null)
-	{
-		<div class="alert alert-success">@Model.DeleteResult</div>
-	}
-	<div class="col-md-12">
-
-		<table class="table">
-			<thead>
-				<tr>
-					<th>ID</th>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Price</th>
-					<th>StockQuantity</th>
-					<th>CreatedAt</th>
-					<!-- Добавьте другие заголовки столбцов здесь -->
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var item in Model.Products)
-				{
-					<tr>
-						<td>@item.ProductId</td>
-						<td>@item.Name</td>
-						<td>@item.Description</td>
-						<td>@item.Price</td>
-						<td>@item.StockQuantity</td>
-						<td>@item.CreatedAt</td>
-					</tr>
-				}
-			</tbody>
-		</table>
-
-		<script src="js/jquery.min.js"></script>
-		<script src="js/bootstrap.min.js"></script>
-		<script src="js/slick.min.js"></script>
-		<script src="js/nouislider.min.js"></script>
-		<script src="js/jquery.zoom.min.js"></script>
-		<script src="js/main.js"></script>
+	<div>
+		<h3>Списки:</h3>
+		<ul>
+			<li><a asp-page="/ModerUsers">Список пользователей</a></li>
+			<li><a asp-page="/ModerReviews">Список отзывов</a></li>
+			<li><a asp-page="/ModerProducts">Список товаров</a></li>
+		</ul>
 	</div>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="js/nouislider.min.js"></script>
+	<script src="js/jquery.zoom.min.js"></script>
+	<script src="js/main.js"></script>
 </body>

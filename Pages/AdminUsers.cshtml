@@ -118,8 +118,22 @@
 		<!-- /MAIN HEADER -->
 	</header>
 
+	<h2>Delete Item by ID</h2>
 
+	<form method="post">
+		<div class="form-group">
+			<label for="itemId">Item ID:</label>
+			<input type="text" class="form-control" id="itemId" name="itemId" required>
+		</div>
+		<button type="submit" class="btn btn-danger">Delete</button>
+	</form>
+
+	@if (Model.DeleteResult != null)
+	{
+		<div class="alert alert-success">@Model.DeleteResult</div>
+	}
 	<div class="col-md-12">
+
 
 		<table class="table">
 			<thead>

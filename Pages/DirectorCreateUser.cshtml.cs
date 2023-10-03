@@ -7,7 +7,7 @@ using System.ComponentModel;
 using Marketplace_Web.Models;
 using System.Net.Http;
 
-public class AdminCreateUser : PageModel
+public class DirectorCreateUser : PageModel
 {
 	public List<Role> Roles = new List<Role>();
 	[BindProperty]

@@ -8,51 +8,77 @@ using Marketplace_Web.Models;
 
 namespace Marketplace_Web.Pages
 {
-    
-		public class AdminProductsModel : PageModel
+
+	public class AdminProductsModel : PageModel
+	{
+		private readonly IHttpClientFactory _clientFactory;
+
+		public AdminProductsModel(IHttpClientFactory clientFactory)
 		{
-			private readonly IHttpClientFactory _clientFactory;
+			_clientFactory = clientFactory;
+		}
 
-			public AdminProductsModel(IHttpClientFactory clientFactory)
-			{
-				_clientFactory = clientFactory;
-			}
+		public List<Product> Products { get; private set; } = new List<Product>();
 
-			public List<User> Users { get; private set; }  = new List<User>();
-			public List<Order> Orders { get; private set; }  = new List<Order>();
-			public List<Category> Categories { get; private set; }  = new List<Category>();
-			public List<OrderItem> OrderItems { get; private set; }  = new List<OrderItem>();
-			public List<Review> Reviews { get; private set; }  = new List<Review>();
-			public List<Role> Roles { get; private set; }  = new List<Role>();
-			public List<Product> Products { get; private set; } = new List<Product>();
-			
-			public async Task OnGetAsync()
+		public async Task OnGetAsync()
+		{
+			try
 			{
-				try
+				using (var httpClient = _clientFactory.CreateClient())
 				{
-					using (var httpClient = _clientFactory.CreateClient())
-					{
-						var apiUrl = "http://localhost:8080/api/product/getall"; // Замените на свой API-URL
-						var response = await httpClient.GetAsync(apiUrl);
+					var apiUrl = "http://localhost:8080/api/product/getall"; // Замените на свой API-URL
+					var response = await httpClient.GetAsync(apiUrl);
 
-						if (response.IsSuccessStatusCode)
-						{
-							var itemsJson = await response.Content.ReadAsStringAsync();
-							Products = JsonSerializer.Deserialize<List<Product>>(itemsJson);
-						}
-						else
-						{
-							// Обработайте ошибку, если не удалось получить данные
-							ModelState.AddModelError(string.Empty, "Произошла ошибка при получении данных.");
-						}
+					if (response.IsSuccessStatusCode)
+					{
+						var itemsJson = await response.Content.ReadAsStringAsync();
+						Products = JsonSerializer.Deserialize<List<Product>>(itemsJson);
+					}
+					else
+					{
+						// Обработайте ошибку, если не удалось получить данные
+						ModelState.AddModelError(string.Empty, "Произошла ошибка при получении данных.");
 					}
 				}
-				catch (Exception ex)
-				{
-					// Обработайте другие исключения, если необходимо
-					ModelState.AddModelError(string.Empty, $"Ошибка: {ex.Message}");
-				}
+			}
+			catch (Exception ex)
+			{
+				// Обработайте другие исключения, если необходимо
+				ModelState.AddModelError(string.Empty, $"Ошибка: {ex.Message}");
 			}
 		}
+		[BindProperty]
+		public int ItemId { get; set; }
+
+		public string DeleteResult { get; set; }
+
+		public async Task<IActionResult> OnPostAsync()
+		{
+			try
+			{
+				using (var httpClient = new HttpClient())
+				{
+					// Замените apiUrl на URL вашего API для удаления элемента
+					var apiUrl = $"http://localhost:8080/api/product/deletebyid/{ItemId}";
+					var response = await httpClient.DeleteAsync(apiUrl);
+
+					if (response.IsSuccessStatusCode)
+					{
+						DeleteResult = "Item successfully deleted.";
+					}
+					else
+					{
+						DeleteResult = "Failed to delete item. Please check the ID.";
+					}
+				}
+			}
+			catch (Exception ex)
+			{
+				DeleteResult = $"An error occurred: {ex.Message}";
+			}
+			await OnGetAsync();
+			return Page();
+		}
 	}
+}
 
