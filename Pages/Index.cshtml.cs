@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Text.Json;
 using System.Text;
 using Microsoft.Extensions.Caching.Memory;
+using System.Net.Mail;
+using System.Net;
 
 namespace Marketplace_Web.Pages
 {
@@ -86,6 +88,47 @@ namespace Marketplace_Web.Pages
 
 			// Если returnUrl не был предоставлен, перенаправляем пользователя на другую страницу после выхода.
 			return RedirectToPage("/index"); // Замените 'ДругаяСтраница' на нужный URL
+		}
+		[HttpPost]
+		public IActionResult OnPostSubscribe(string email)
+		{
+			// Здесь вызывайте ваш метод SendMessageAsync() и передавайте в него email
+			 SendMessageAsync(email);
+
+			// Возвращайте представление или редирект, в зависимости от вашей логики
+			return Page();
+		}
+		static async Task SendMessageAsync(string email)
+		{
+			string fromEmail = "legenadary.pigeon@gmail.com"; // Ваш адрес электронной почты Gmail
+			string fromEmailPassword = "burz uiew yaqc zfrq"; // Пароль от вашей почты Gmail
+			string toEmail = email; // Адрес получателя
+
+			SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
+			{
+				Port = 587,
+				Credentials = new NetworkCredential(fromEmail, fromEmailPassword),
+				EnableSsl = true,
+			};
+
+			MailMessage mailMessage = new MailMessage
+			{
+				From = new MailAddress(fromEmail),
+				Subject = "Subscribe",
+				Body = "I am subscribe and you have been subscribed!",
+			};
+
+			mailMessage.To.Add(toEmail);
+
+			try
+			{
+				smtpClient.Send(mailMessage);
+				Console.WriteLine("Письмо успешно отправлено.");
+			}
+			catch (Exception ex)
+			{
+				Console.WriteLine($"Ошибка при отправке письма: {ex.Message}");
+			}
 		}
 	}
 }

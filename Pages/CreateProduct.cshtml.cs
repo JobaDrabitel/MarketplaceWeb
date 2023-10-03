@@ -47,7 +47,7 @@ namespace Marketplace_Web {
 				Description = Product.Description,
 				CategoryId = Product.CategoryId,
 				Price = Product.Price,
-				ImageURL = Product.ImageUrl,
+				ImageUrl = Product.ImageUrl,
 				StockQuantity = Product.StockQuantity,
 				SellerUserId = sellerUserId.Value
 			};
@@ -60,12 +60,12 @@ namespace Marketplace_Web {
 			{
 				var apiUrl = "http://localhost:8080/api/product/create";
 				var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-				var response = await httpClient.PostAsync(apiUrl, content);
+				var response = await httpClient.PutAsync(apiUrl, content);
 
 				if (response.IsSuccessStatusCode)
 				{
 					// “овар успешно создан, выполните необходимые действи€, например, перенаправьтесь на страницу с подтверждением
-					return RedirectToPage("/ProductCreated");
+					return RedirectToPage("/MyProducts");
 				}
 				else
 				{

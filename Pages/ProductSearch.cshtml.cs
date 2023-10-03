@@ -50,6 +50,32 @@ namespace Marketplace_Web.Pages
 
             return Page();
         }
+		public async Task<IActionResult> OnGet(int Category)
+		{
+			CategoryId = Category;
+			using (var httpClient = new HttpClient())
+			{
+				var apiUrl = "http://localhost:8080/api/product/getall";
+				var response = await httpClient.GetAsync(apiUrl);
 
-    }
+				if (response.IsSuccessStatusCode)
+				{
+					var productsJson = await response.Content.ReadAsStringAsync();
+					var products = JsonSerializer.Deserialize<List<Product>>(productsJson);
+					if (products != null)
+						
+							foreach (var product in products)
+							{
+								if (product.CategoryId == Category)
+									Products.Add(product);
+							}
+				}
+				else
+				{
+				}
+			}
+			return Page();
+		}
+
+	}
 }

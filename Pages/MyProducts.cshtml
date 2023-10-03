@@ -36,7 +36,7 @@
 				}
 
 				<ul class="header-links pull-right">
-					<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+					
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -174,7 +174,7 @@
         <h3 class="title">My Products</h3>
         <div class="section-nav">
             <ul class="section-tab-nav tab-nav">
-                <!-- Здесь можно добавить ваши категории, если нужно -->
+				<a asp-page="/CreateProduct" class="btn btn-primary">Create Product</a>
             </ul>
         </div>
     </div>
