@@ -44,7 +44,6 @@ namespace Marketplace_Web.Pages
 				}
 				else
 				{
-					throw new Exception();
 				}
 			}
 

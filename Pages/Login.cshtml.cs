@@ -1,5 +1,6 @@
 using Marketplace_Web;
 using Marketplace_Web.Models;
+using Marketplace_Web.Pages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -64,11 +65,20 @@ public class LoginModel : PageModel
 					HttpContext.Session.SetString("FirstName", user.FirstName);
 					HttpContext.Session.SetString("LastName", user.LastName);
 					HttpContext.Session.SetString("Email", user.Email);
+                    HttpContext.Session.SetInt32("RoleId", (int)user.RoleId);
 					if (user.ImageUrl != null)
 						HttpContext.Session.SetString("ImageUrl", user.ImageUrl);
+                    IndexModel.user = user;
 				}
-				return RedirectToPage("/Index");
-            }
+                
+                if (user != null && user.RoleId == 0)
+                    return RedirectToPage("/Index");
+                else if (user != null && user.RoleId == 1)
+                    return RedirectToPage("/Admin");
+                else if (user != null && user.RoleId == 2)
+                    return RedirectToPage("/Moderator");
+                else return Page();
+			}
             else
             {
                 // Ошибка аутентификации
