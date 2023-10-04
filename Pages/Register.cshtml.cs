@@ -77,7 +77,7 @@ public class RegisterModel : PageModel
             }
             else if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
             {
-				ModelState.AddModelError(string.Empty, "Этот email уже используется.");
+				ModelState.AddModelError(string.Empty, "Некорректные данные или email уже используется");
             }
              return Page(); 
         }

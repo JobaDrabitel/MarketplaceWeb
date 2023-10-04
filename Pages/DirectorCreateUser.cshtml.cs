@@ -15,7 +15,8 @@ public class DirectorCreateUser : PageModel
 
 	[BindProperty]
 	public string LastName { get; set; }
-
+	[BindProperty]
+	public string ImageUrl { get; set; }
 	[BindProperty]
 	[DisplayName("Email")]
 	[Required(ErrorMessage = "Поле Email обязательно")]
@@ -41,7 +42,7 @@ public class DirectorCreateUser : PageModel
 	[Compare(nameof(Password), ErrorMessage = "Подтверждение пароля должно совпадать с паролем")]
 	[DataType(DataType.Password)]
 	public string ConfirmPassword { get; set; } = null!;
-	public async Task<IActionResult> OnGet()
+	public async Task<IActionResult> OnGet(Role selectedRole)
 	{
 		if (HttpContext.Session.GetInt32("RoleId") < 3)
 			return RedirectToPage("/Index");
@@ -54,13 +55,20 @@ public class DirectorCreateUser : PageModel
 			return Page();
 		}
 	}
-	public async Task<IActionResult> OnPost(Role role)
+	public async Task<IActionResult> OnPost(string selectedRole)
 	{
+		using (HttpClient client = new HttpClient())
+		{
+			var apiUrl = "http://localhost:8080/api/role/getall";
+			var response = await client.GetAsync(apiUrl);
+			var json = await response.Content.ReadAsStringAsync();
+			Roles = JsonSerializer.Deserialize<List<Role>>(json);
+		}
 		if (!ModelState.IsValid)
 		{
 			return Page();
 		}
-
+		var role = Roles.FirstOrDefault(r => r.RoleName == selectedRole);
 		var regData = new
 		{
 			FirstName,
@@ -68,6 +76,7 @@ public class DirectorCreateUser : PageModel
 			Email,
 			PasswordHash = Password,
 			role.RoleId,
+			ImageUrl,
 			Phone,
 		};
 

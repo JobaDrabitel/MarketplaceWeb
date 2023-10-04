@@ -128,6 +128,7 @@
 				<input type="text" id="LastName" name="LastName" class="form-control" />
 				<span asp-validation-for="LastName"></span>
 			</div>
+
 			<div class="form-group">
 				<label for="Phone">Phone:</label>
 				<input type="number" id="Phone" name="Phone" class="form-control" />
@@ -139,6 +140,7 @@
 				<input type="email" id="Email" name="Email" class="form-control" />
 				<span asp-validation-for="Email"></span>
 			</div>
+
 			@if (!ViewData.ModelState.IsValid)
 			{
 				<div class="alert alert-danger">
@@ -153,6 +155,7 @@
 					</ul>
 				</div>
 			}
+
 			<div class="form-group">
 				<label for="Password">Password:</label>
 				<input type="password" id="Password" name="Password" class="form-control" />
@@ -164,15 +167,24 @@
 				<input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" />
 				<span asp-validation-for="ConfirmPassword"></span>
 			</div>
-			<form method="post">
-				<select name="selectedRole">
+
+			<div class="form-group">
+				<label for="selectedRole">Select Role:</label>
+				<select name="selectedRole" id="selectedRole" class="form-control">
 					@foreach (var role in Model.Roles)
 					{
 						<option value="@role.RoleName">@role.RoleName</option>
 					}
 				</select>
-				<button type="submit" class="btn btn-primary">Создать пользователя</button>
-			</form>
+			</div>
+
+			<div class="form-group">
+				<label for="ImageUrl">ImageUrl:</label>
+				<input type="url" id="ImageUrl" name="ImageUrl" class="form-control" />
+				<span asp-validation-for="ImageUrl"></span>
+			</div>
+
+			<button type="submit" class="btn btn-primary">Create User</button>
 		</form>
 </div>
 

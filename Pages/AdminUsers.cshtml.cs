@@ -18,7 +18,7 @@ namespace Marketplace_Web.Pages
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			if (HttpContext.Session.GetInt32("RoleId") < 3 || HttpContext.Session.GetInt32("RoleId") == null)
+			if (HttpContext.Session.GetInt32("RoleId") < 2 || HttpContext.Session.GetInt32("RoleId") == null)
 				return RedirectToPage("/Index");
 			try
 			{
@@ -58,7 +58,7 @@ namespace Marketplace_Web.Pages
 				using (var httpClient = new HttpClient())
 				{
 					// Замените apiUrl на URL вашего API для удаления элемента
-					var apiUrl = $"http://localhost:8080/api/product/deletebyid/{ItemId}";
+					var apiUrl = $"http://localhost:8080/api/user/deletebyid/{ItemId}";
 					var response = await httpClient.DeleteAsync(apiUrl);
 
 					if (response.IsSuccessStatusCode)

@@ -15,11 +15,14 @@ public class LoginModel : PageModel
     [BindProperty]
     [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Invalid email format.")]
-    public string Email { get; set; }
+	[MaxLength(32, ErrorMessage = "Максимальная длина email может быть 32 символа")]
+	public string Email { get; set; }
 
     [BindProperty]
     [Required(ErrorMessage = "Password is required.")]
-    [DataType(DataType.Password)]
+	[MinLength(8, ErrorMessage = "Минимальная длина пароля должна быть 8 символов")]
+	[MaxLength(32, ErrorMessage = "Максимальная длина пароля может быть 32 символа")]
+	[DataType(DataType.Password)]
     public string Password { get; set; }
 
     public async Task<IActionResult> OnPostAsync()
