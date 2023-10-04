@@ -77,9 +77,9 @@ public class LoginModel : PageModel
                 if (user != null && user.RoleId == 1)
                     return RedirectToPage("/Index");
                 else if (user != null && user.RoleId == 2)
-                    return RedirectToPage("/Admin");
-                else if (user != null && user.RoleId == 3)
                     return RedirectToPage("/Moderator");
+                else if (user != null && user.RoleId == 3)
+                    return RedirectToPage("/Admin");
 				else if (user != null && user.RoleId == 4)
 					return RedirectToPage("/Director");
 				else return Page();

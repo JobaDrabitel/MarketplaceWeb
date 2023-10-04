@@ -14,6 +14,7 @@ namespace Marketplace_Web.Pages
     {
         private readonly ILogger<IndexModel> _logger;
         public static  User user;
+		public int? currentRole;
 		private readonly IMemoryCache _cache;
 		public static  IEnumerable<Category> Categories { get; private set; }
 		public static  IEnumerable<Product> Products { get; private set; }
@@ -25,6 +26,7 @@ namespace Marketplace_Web.Pages
 
         public async Task OnGet()
         {
+			currentRole = HttpContext.Session.GetInt32("RoleId");
 			user =  UserSessions.GetUser(HttpContext.Session);
 			Categories = await GetCategories();
 			Products = await GetProducts();

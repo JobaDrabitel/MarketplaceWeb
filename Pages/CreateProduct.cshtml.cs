@@ -51,7 +51,6 @@ namespace Marketplace_Web {
 				StockQuantity = Product.StockQuantity,
 				SellerUserId = sellerUserId.Value,
 				CreatedAt = DateTime.Now,
-				UpdatedAt = DateTime.Now,
 			};
 
 			// Сериализуйте данные в JSON

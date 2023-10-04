@@ -44,7 +44,7 @@ public class DirectorCreateUser : PageModel
 	public string ConfirmPassword { get; set; } = null!;
 	public async Task<IActionResult> OnGet(Role selectedRole)
 	{
-		if (HttpContext.Session.GetInt32("RoleId") < 3)
+		if (HttpContext.Session.GetInt32("RoleId") < 4)
 			return RedirectToPage("/Index");
 		using (HttpClient client = new HttpClient())
 		{

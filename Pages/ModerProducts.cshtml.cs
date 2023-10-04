@@ -28,7 +28,7 @@ namespace Marketplace_Web.Pages
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			if (HttpContext.Session.GetInt32("RoleId") < 3 || HttpContext.Session.GetInt32("RoleId") == null)
+			if (HttpContext.Session.GetInt32("RoleId") < 2 || HttpContext.Session.GetInt32("RoleId") == null) 
 				return RedirectToPage("/Index");
 			try
 				{
@@ -41,6 +41,9 @@ namespace Marketplace_Web.Pages
 						{
 							var itemsJson = await response.Content.ReadAsStringAsync();
 							Products = JsonSerializer.Deserialize<List<Product>>(itemsJson);
+							foreach (var product in Products)
+								if (product.UpdatedAt == null)
+								Products.Remove(product);
 						}
 						else
 						{

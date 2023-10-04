@@ -1,17 +1,15 @@
 ﻿@page
-@model Marketplace_Web.Pages.AdminModel
-@{
-}
+@model ModeratorApproveProductsModel;
 <head>
-    <!-- Google font -->
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/slick.css" />
-    <link rel="stylesheet" href="css/slick-theme.css" />
-    <link rel="stylesheet" href="css/nouislider.min.css" />
-    <link rel="stylesheet" href="css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/style.css" />
-    <link rel="stylesheet" href="css/site.css" />
+	<!-- Google font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
+	<link rel="stylesheet" href="css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/slick.css" />
+	<link rel="stylesheet" href="css/slick-theme.css" />
+	<link rel="stylesheet" href="css/nouislider.min.css" />
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/style.css" />
+	<link rel="stylesheet" href="css/site.css" />
 
 </head>
 <body>
@@ -134,20 +132,41 @@
 		<!-- /MAIN HEADER -->
 	</header>
 
-<div>
-    <h3>Списки:</h3>
-    <ul>
-        <li><a asp-page="/AdminUsers">Список пользователей</a></li>
-        <li><a asp-page="/AdminReviews">Список отзывов</a></li>
-        <li><a asp-page="/AdminProducts">Список товаров</a></li>
-		<li><a asp-page="/ModeratorApproveProducts">Одобрение товаров</a></li>
 
-    </ul>
-</div>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/slick.min.js"></script>
-	<script src="js/nouislider.min.js"></script>
-	<script src="js/jquery.zoom.min.js"></script>
-	<script src="js/main.js"></script>
-	</body>
+	<div class="col-md-12">
+
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Price</th>
+					<th>StockQuantity</th>
+					<th>CreatedAt</th>
+					<!-- Добавьте другие заголовки столбцов здесь -->
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Products)
+				{
+					<tr>
+						<td>@item.ProductId</td>
+						<td>@item.Name</td>
+						<td>@item.Description</td>
+						<td>@item.Price</td>
+						<td>@item.StockQuantity</td>
+						<td>@item.CreatedAt</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/slick.min.js"></script>
+		<script src="js/nouislider.min.js"></script>
+		<script src="js/jquery.zoom.min.js"></script>
+		<script src="js/main.js"></script>
+	</div>
+</body>

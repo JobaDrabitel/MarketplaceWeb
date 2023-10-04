@@ -45,6 +45,21 @@
 								<li><a href="/Profile"><i class="fa fa-user"></i> Профиль</a></li>
 								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> MyProducts</a></li>
 								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
+								@{
+									var role = HttpContext.Session.GetInt32("RoleId");
+								}
+								@switch (role)
+								{
+									case 2:
+										<li><a href="/Moderator"><i class="fa fa-sign-out"></i> Moder Page</a></li>
+										break;
+									case 3:
+										<li><a href="/Admin"><i class="fa fa-sign-out"></i> Admin Page</a></li>
+										break;
+									case 4:
+										<li><a href="/Director"><i class="fa fa-sign-out"></i> Director Page</a></li>
+										break;
+								}
 							</ul>
 						</li>
 					}
