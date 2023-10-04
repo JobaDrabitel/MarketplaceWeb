@@ -16,21 +16,21 @@ namespace Marketplace_Web.Pages
 
 		public List<User> Users { get; private set; } = new List<User>();
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
+			if (HttpContext.Session.GetInt32("RoleId") < 3 || HttpContext.Session.GetInt32("RoleId") == null)
+				return RedirectToPage("/Index");
 			try
 			{
 				using (var httpClient = _clientFactory.CreateClient())
 				{
-					var apiUrl = "http://localhost:8080/api/product/getall"; // Замените на свой API-URL
+					var apiUrl = "http://localhost:8080/api/user/getall"; // Замените на свой API-URL
 					var response = await httpClient.GetAsync(apiUrl);
 
 					if (response.IsSuccessStatusCode)
 					{
 						var itemsJson = await response.Content.ReadAsStringAsync();
 						Users = JsonSerializer.Deserialize<List<User>>(itemsJson);
-						foreach(var user in Users)
-							if (user.RoleId > 1) { Users.Remove(user); }
 					}
 					else
 					{
@@ -44,6 +44,7 @@ namespace Marketplace_Web.Pages
 				// Обработайте другие исключения, если необходимо
 				ModelState.AddModelError(string.Empty, $"Ошибка: {ex.Message}");
 			}
+			return Page();
 		}
 		[BindProperty]
 		public int ItemId { get; set; }

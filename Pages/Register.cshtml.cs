@@ -52,7 +52,7 @@ public class RegisterModel : PageModel
             LastName,
             Email,
             PasswordHash = Password,
-            RoleId = 2,
+            RoleId = 1,
             Phone,
         };
 

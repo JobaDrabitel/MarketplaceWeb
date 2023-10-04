@@ -5,6 +5,7 @@ using System.Collections;
 using System.Linq;
 using System.Text.Json;
 using Marketplace_Web.Models;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Marketplace_Web.Pages
 {
@@ -20,8 +21,10 @@ namespace Marketplace_Web.Pages
 
 		public List<Review> Reviews { get; private set; } = new List<Review>();
 
-		public async Task OnGetAsync()
+		public async Task<IActionResult> OnGetAsync()
 		{
+			if (HttpContext.Session.GetInt32("RoleId") < 3 || HttpContext.Session.GetInt32("RoleId") == null)
+				return RedirectToPage("/Index");
 			try
 			{
 				using (var httpClient = _clientFactory.CreateClient())
@@ -46,6 +49,7 @@ namespace Marketplace_Web.Pages
 				// Обработайте другие исключения, если необходимо
 				ModelState.AddModelError(string.Empty, $"Ошибка: {ex.Message}");
 			}
+			return Page();
 		}
 	}
 }

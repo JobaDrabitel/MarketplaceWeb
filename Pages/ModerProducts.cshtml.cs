@@ -25,10 +25,12 @@ namespace Marketplace_Web.Pages
 			public List<Review> Reviews { get; private set; }  = new List<Review>();
 			public List<Role> Roles { get; private set; }  = new List<Role>();
 			public List<Product> Products { get; private set; } = new List<Product>();
-			
-			public async Task OnGetAsync()
-			{
-				try
+
+		public async Task<IActionResult> OnGetAsync()
+		{
+			if (HttpContext.Session.GetInt32("RoleId") < 3 || HttpContext.Session.GetInt32("RoleId") == null)
+				return RedirectToPage("/Index");
+			try
 				{
 					using (var httpClient = _clientFactory.CreateClient())
 					{
@@ -52,6 +54,7 @@ namespace Marketplace_Web.Pages
 					// Обработайте другие исключения, если необходимо
 					ModelState.AddModelError(string.Empty, $"Ошибка: {ex.Message}");
 				}
+			return Page();
 			}
 		}
 	}

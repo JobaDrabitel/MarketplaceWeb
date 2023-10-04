@@ -43,6 +43,8 @@ public class DirectorCreateUser : PageModel
 	public string ConfirmPassword { get; set; } = null!;
 	public async Task<IActionResult> OnGet()
 	{
+		if (HttpContext.Session.GetInt32("RoleId") < 3)
+			return RedirectToPage("/Index");
 		using (HttpClient client = new HttpClient())
 		{
 			var apiUrl = "http://localhost:8080/api/role/getall";
@@ -81,12 +83,7 @@ public class DirectorCreateUser : PageModel
 
 			if (response.IsSuccessStatusCode && response.Content != null)
 			{
-				var userId = Convert.ToInt32(await response.Content.ReadAsStringAsync());
-				HttpContext.Session.SetInt32("UserId", userId);
-				HttpContext.Session.SetString("FirstName", FirstName);
-				HttpContext.Session.SetString("LastName", LastName);
-				HttpContext.Session.SetString("Email", Email);
-				return RedirectToPage("/Index");
+				
 			}
 			else if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
 			{
