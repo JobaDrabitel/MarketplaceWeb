@@ -71,7 +71,7 @@ public class LoginModel : PageModel
                     HttpContext.Session.SetInt32("RoleId", (int)user.RoleId);
 					if (user.ImageUrl != null)
 						HttpContext.Session.SetString("ImageUrl", user.ImageUrl);
-                    IndexModel.user = user;
+                    UserSessions.SetUser(HttpContext.Session, user);
 				}
                 
                 if (user != null && user.RoleId == 1)

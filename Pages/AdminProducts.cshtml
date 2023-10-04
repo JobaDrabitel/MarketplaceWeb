@@ -24,8 +24,8 @@
 					<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
 				</ul>
 				@{
+					var user = UserSessions.GetUser(HttpContext.Session);
 					var isAuthenticated = false;
-					var user = IndexModel.user;
 					if (user != null)
 						if (user.FirstName != null)
 							isAuthenticated = true;

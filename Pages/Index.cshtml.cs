@@ -13,7 +13,7 @@ namespace Marketplace_Web.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
-        public static  User user;
+        public  User user;
 		public int? currentRole;
 		private readonly IMemoryCache _cache;
 		public static  IEnumerable<Category> Categories { get; private set; }
@@ -78,33 +78,28 @@ namespace Marketplace_Web.Pages
 		}
 		public IActionResult OnGetLogout(string returnUrl)
 		{
-			// Очищаем сессию и устанавливаем isAuthenticated в false
 			HttpContext.Session.Clear();
 			user = null;
 
-			// Проверяем, был ли предоставлен returnUrl, и перенаправляем на него, если да.
 			if (!string.IsNullOrEmpty(returnUrl))
 			{
 				return Redirect(returnUrl);
 			}
 
-			// Если returnUrl не был предоставлен, перенаправляем пользователя на другую страницу после выхода.
-			return RedirectToPage("/index"); // Замените 'ДругаяСтраница' на нужный URL
+			return RedirectToPage("/index"); 
 		}
 		[HttpPost]
 		public IActionResult OnPostSubscribe(string email)
 		{
-			// Здесь вызывайте ваш метод SendMessageAsync() и передавайте в него email
 			 SendMessageAsync(email);
 
-			// Возвращайте представление или редирект, в зависимости от вашей логики
 			return Page();
 		}
 		static async Task SendMessageAsync(string email)
 		{
-			string fromEmail = "legenadary.pigeon@gmail.com"; // Ваш адрес электронной почты Gmail
-			string fromEmailPassword = "burz uiew yaqc zfrq"; // Пароль от вашей почты Gmail
-			string toEmail = email; // Адрес получателя
+			string fromEmail = "legenadary.pigeon@gmail.com"; 
+			string fromEmailPassword = "burz uiew yaqc zfrq"; 
+			string toEmail = email; 
 
 			SmtpClient smtpClient = new SmtpClient("smtp.gmail.com")
 			{

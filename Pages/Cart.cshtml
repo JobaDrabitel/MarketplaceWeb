@@ -25,7 +25,7 @@
 				</ul>
 				@{
 					var isAuthenticated = false;
-					var user = IndexModel.user;
+					var user = UserSessions.GetUser(HttpContext.Session);
 					if (user != null)
 						if (user.FirstName != null)
 							isAuthenticated = true;
@@ -135,6 +135,13 @@
 
 
 <div class="col-md-12">
+					<div class="row">
+						<div class="text-center">
+							<form method="post" asp-page-handler="PlaceOrder">
+								<button type="submit" class="btn btn-primary">Оформить покупку</button>
+							</form>
+						</div>
+					</div>
     <div class="row">
         <div class="products-tabs">
             <!-- tab -->
@@ -159,19 +166,10 @@
                             </div>
                         </div>
                     }
-						<div class="col-md-12">
-							<div class="row">
-								<div class="text-center">
-									<form method="post" asp-page-handler="PlaceOrder">
-										<button type="submit" class="btn btn-primary">Оформить покупку</button>
-									</form>
-								</div>
-							</div>
-						</div>
+						
                 </div>
                 <div id="slick-nav-1" class="products-slick-nav"></div>
             </div>
-			
         </div>
     </div>
 	<script src="js/jquery.min.js"></script>

@@ -25,7 +25,7 @@
 				</ul>
 				@{
 					var isAuthenticated = false;
-					var user = IndexModel.user;
+					var user = UserSessions.GetUser(HttpContext.Session);
 					if (user!= null)
 						if (user.FirstName != null)
 							isAuthenticated = true;
