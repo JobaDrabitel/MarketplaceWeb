@@ -1,5 +1,5 @@
 ﻿@page
-@model AdminProductsModel;
+@model ModerUsersModel;
 <head>
 	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -118,44 +118,29 @@
 		<!-- /MAIN HEADER -->
 	</header>
 
-	<h2>Delete Item by ID</h2>
 
-	<form method="post">
-		<div class="form-group">
-			<label for="itemId">Item ID:</label>
-			<input type="text" class="form-control" id="itemId" name="itemId" required>
-		</div>
-		<button type="submit" class="btn btn-danger">Delete</button>
-	</form>
-
-	@if (Model.DeleteResult != null)
-	{
-		<div class="alert alert-success">@Model.DeleteResult</div>
-	}
 	<div class="col-md-12">
 
 		<table class="table">
 			<thead>
 				<tr>
 					<th>ID</th>
-					<th>Name</th>
-					<th>Description</th>
-					<th>Price</th>
-					<th>StockQuantity</th>
-					<th>CreatedAt</th>
+					<th>FirstName</th>
+					<th>LastName</th>
+					<th>Phone</th>
+					<th>Email</th>
 					<!-- Добавьте другие заголовки столбцов здесь -->
 				</tr>
 			</thead>
 			<tbody>
-				@foreach (var item in Model.Products)
+				@foreach (var item in Model.Users)
 				{
 					<tr>
-						<td>@item.ProductId</td>
-						<td>@item.Name</td>
-						<td>@item.Description</td>
-						<td>@item.Price</td>
-						<td>@item.StockQuantity</td>
-						<td>@item.CreatedAt</td>
+						<td>@item.UserId</td>
+						<td>@item.FirstName</td>
+						<td>@item.LastName</td>
+						<td>@item.Phone</td>
+						<td>@item.Email</td>
 					</tr>
 				}
 			</tbody>

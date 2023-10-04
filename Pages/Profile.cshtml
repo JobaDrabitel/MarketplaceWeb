@@ -123,74 +123,85 @@
 		<!-- /MAIN HEADER -->
 	</header>
 	<!-- /HEADER -->
-@if (Model.User != null && !string.IsNullOrEmpty(Model.User.ImageUrl))
-{
-    <div class="user-image">
-        <img src="@Model.User.ImageUrl" alt="User Image" class="img-fluid" />
-    </div>
-}
-<form method="post">
-    <div class="form-group">
-        <label for="FirstName">First Name:</label>
-        <input value=@Model.User.FirstName type="text" id="FirstName" name="FirstName" class="form-control" />
-        <span asp-validation-for="FirstName"></span>
-    </div>
+	<div class="container">
+		<div class="row justify-content-center">
+			<div class="col-md-6">
+				@if (Model.User != null && !string.IsNullOrEmpty(Model.User.ImageUrl))
+				{
+					<div class="user-image">
+						<img src="@Model.User.ImageUrl" alt="User Image" class="img-fluid" />
+					</div>
+				}
+				<form method="post">
+					<div class="form-group">
+						<label for="FirstName">First Name:</label>
+						<input value="@Model.User.FirstName" type="text" id="FirstName" name="FirstName" class="form-control" />
+						<span asp-validation-for="FirstName"></span>
+					</div>
 
-    <div class="form-group">
-        <label for="LastName">Last Name:</label>
-        <input value=@Model.User.LastName type="text" id="LastName" name="LastName" class="form-control" />
-        <span asp-validation-for="LastName"></span>
-    </div>
-    <div class="form-group">
-        <label for="Phone">Phone:</label>
-        <input value=@Model.User.Phone type="number" id="Phone" name="Phone" class="form-control" />
-        <span asp-validation-for="Phone"></span>
-    </div>
+					<div class="form-group">
+						<label for="LastName">Last Name:</label>
+						<input value="@Model.User.LastName" type="text" id="LastName" name="LastName" class="form-control" />
+						<span asp-validation-for="LastName"></span>
+					</div>
 
-    <div class="form-group">
-        <label for="Email">Email:</label>
-        <input value="@Model.User.Email" type="email" id="Email" name="Email" class="form-control" />
-        <span asp-validation-for="Email"></span>
-    </div>
-    @if (!ViewData.ModelState.IsValid)
-    {
-        <div class="alert alert-danger">
-            <ul>
-                @foreach (var key in ViewData.ModelState.Keys)
-                {
-                    foreach (var error in ViewData.ModelState[key].Errors)
-                    {
-                        <li>@error.ErrorMessage</li>
-                    }
-                }
-            </ul>
-        </div>
-    }
-    <div class="form-group">
-        <label for="Password">Password:</label>
-        <input value=@Model.User.PasswordHash type="password" id="Password" name="Password" class="form-control" />
-        <span asp-validation-for="Password"></span>
-    </div>
+					<div class="form-group">
+						<label for="Phone">Phone:</label>
+						<input value="@Model.User.Phone" type="number" id="Phone" name="Phone" class="form-control" />
+						<span asp-validation-for="Phone"></span>
+					</div>
 
-    <div class="form-group">
-        <label for="ConfirmPassword">Confirm Password:</label>
-        <input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" />
-        <span asp-validation-for="ConfirmPassword"></span>
-    </div>
-    <div class="form-group">
-        <label for="ImageUrl">ImageUrl:</label>
-        <input value=@Model.User.ImageUrl type="url" id="ImageUrl" name="ImageUrl" class="form-control" />
-        <span asp-validation-for="ImageUrl"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Profile</button>
-</form>
+					<div class="form-group">
+						<label for="Email">Email:</label>
+						<input value="@Model.User.Email" type="email" id="Email" name="Email" class="form-control" />
+						<span asp-validation-for="Email"></span>
+					</div>
 
-@if (Model.IsUpdated)
-{
-    <div class="alert alert-success" role="alert">
-        Profile updated successfully!
-    </div>
-}
+					@if (!ViewData.ModelState.IsValid)
+					{
+						<div class="alert alert-danger">
+							<ul>
+								@foreach (var key in ViewData.ModelState.Keys)
+								{
+									foreach (var error in ViewData.ModelState[key].Errors)
+									{
+										<li>@error.ErrorMessage</li>
+									}
+								}
+							</ul>
+						</div>
+					}
+
+					<div class="form-group">
+						<label for="Password">Password:</label>
+						<input value="@Model.User.PasswordHash" type="password" id="Password" name="Password" class="form-control" />
+						<span asp-validation-for="Password"></span>
+					</div>
+
+					<div class="form-group">
+						<label for="ConfirmPassword">Confirm Password:</label>
+						<input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" />
+						<span asp-validation-for="ConfirmPassword"></span>
+					</div>
+
+					<div class="form-group">
+						<label for="ImageUrl">ImageUrl:</label>
+						<input value="@Model.User.ImageUrl" type="url" id="ImageUrl" name="ImageUrl" class="form-control" />
+						<span asp-validation-for="ImageUrl"></span>
+					</div>
+
+					<button type="submit" class="btn btn-primary">Update Profile</button>
+				</form>
+
+				@if (Model.IsUpdated)
+				{
+					<div class="alert alert-success mt-3" role="alert">
+						Profile updated successfully!
+					</div>
+				}
+			</div>
+		</div>
+	</div>
 </body>
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
