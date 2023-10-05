@@ -14,13 +14,12 @@ namespace Marketplace_Web.Pages
         public async Task<IActionResult> OnGetAsync()
         {
 			var action = Request.Query["action"].ToString();
-				using (var httpClient = new HttpClient())
+			using (var httpClient = new HttpClient())
             {
                 var apiUrl = "http://localhost:8080/api/wishlist/getbyfields";
                 var userId = HttpContext.Session.GetInt32("UserId");
 				if (userId == null)
 					return Page();
-                // Подготовьте JSON-запрос для API
                 var requestData = new
                 {
                     UserID = userId
@@ -66,7 +65,14 @@ namespace Marketplace_Web.Pages
 			List<Product> selectedProducts = await GetSelectedProducts();
 			decimal? sum = 0;
 			foreach (var product in selectedProducts)
+			{
+				if (product.StockQuantity < 1)
+				{
+					ModelState.AddModelError(string.Empty, $"Произошла ошибка при оформлении заказа. Товара {product.Name}  нет в наличии");
+					return Page();
+				}
 				sum += product.Price;
+			}
 			if (sum == 0)
 			{
 				return RedirectToPage("/Index");
@@ -105,10 +111,15 @@ namespace Marketplace_Web.Pages
 							Price = product.Price,
 							OrderId = newOrder[0].OrderId
 						};
+						apiUrl = "http://localhost:8080/api/orderitem/create";
 						jsonData = JsonSerializer.Serialize(orderItem);
 						content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-						apiUrl = "http://localhost:8080/api/orderitem/create";
 						response = await httpClient.PutAsync(apiUrl, content);
+						apiUrl = $"http://localhost:8080/api/product/updatebyid/{product.ProductId}";
+						var data = new { StockQuantity = product.StockQuantity - 1 };
+						jsonData = JsonSerializer.Serialize(data);
+						content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+						response = await httpClient.PostAsync(apiUrl, content);
 					}
 						if (response.IsSuccessStatusCode)
 						{
@@ -126,6 +137,8 @@ namespace Marketplace_Web.Pages
 							{
 								apiUrl = $"http://localhost:8080/api/wishlist/deletebyid/{newWishlist.WishlistId}";
 								response = await httpClient.DeleteAsync(apiUrl);
+								
+
 							}
 							return RedirectToPage("/Index");
 						}

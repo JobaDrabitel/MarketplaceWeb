@@ -44,6 +44,17 @@ namespace Marketplace_Web.Pages
 
             return Page();
         }
+        public async Task OnPostDeleteProductAsync(int productId)
+        {
+			var apiUrl = $"http://localhost:8080/api/product/deletebyid/{productId}";
+			using (var httpClient = new HttpClient())
+			{
+				var response = await httpClient.DeleteAsync(apiUrl);
+
+                
+			}
+            await OnGetAsync();
+		}
 
     }
 }

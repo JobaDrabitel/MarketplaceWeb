@@ -42,7 +42,8 @@ namespace Marketplace_Web.Pages
 						    if (product.Name.ToUpper().Contains(searchTerm.ToUpper()) && product.CategoryId == categoryId)
                                 Products.Add(product);
                         }
-                }
+					Products.RemoveAll(product => product.UpdatedAt == null);
+				}
                 else
                 {
                 }
