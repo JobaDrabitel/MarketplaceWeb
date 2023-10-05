@@ -164,6 +164,11 @@
                                     <h4 class="product-price">$@product.Price</h4>
                                 </div>
                             </div>
+								<div class="product-delete-button">
+									<form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.ProductId">
+										<button type="submit" class="btn btn-danger">Удалить</button>
+									</form>
+								</div>
                         </div>
                     }
 						

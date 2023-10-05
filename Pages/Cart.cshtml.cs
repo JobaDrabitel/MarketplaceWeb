@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using System.Text;
+using System.Net.Http;
 
 namespace Marketplace_Web.Pages
 {
@@ -137,8 +138,6 @@ namespace Marketplace_Web.Pages
 							{
 								apiUrl = $"http://localhost:8080/api/wishlist/deletebyid/{newWishlist.WishlistId}";
 								response = await httpClient.DeleteAsync(apiUrl);
-								
-
 							}
 							return RedirectToPage("/Index");
 						}
@@ -153,6 +152,26 @@ namespace Marketplace_Web.Pages
 				}
 				
 			}
+		public async Task OnPostDeleteProductAsync(int productId)
+		{
+			var apiUrl = $"http://localhost:8080/api/wishlist/getbyfields/";
+			Wishlist wishlist = new Wishlist { ProductId = productId, UserId = HttpContext.Session.GetInt32("UserId")};
+			var jsonData = JsonSerializer.Serialize(wishlist);
+			var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+			using (var httpClient = new HttpClient())
+			{
+			var response = await httpClient.PostAsync(apiUrl, content);
+				if (response.IsSuccessStatusCode)
+				{
+					var json = await response.Content.ReadAsStringAsync();
+					var wishlists = JsonSerializer.Deserialize<List<Wishlist>>(json);
+					apiUrl = $"http://localhost:8080/api/wishlist/deletebyid/{wishlists[0].WishlistId}";
+					response = await httpClient.DeleteAsync(apiUrl);
+
+				}
+			}
+			await OnGetAsync();
 		}
+	}
 	}
 
