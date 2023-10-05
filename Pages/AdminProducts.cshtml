@@ -164,12 +164,12 @@
 				@foreach (var item in Model.Products)
 				{
 					<tr>
-						<td>@item.ProductId</td>
-						<td>@item.Name</td>
-						<td>@item.Description</td>
-						<td>@item.Price</td>
-						<td>@item.StockQuantity</td>
-						<td>@item.CreatedAt</td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Name</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Description</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Price</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.StockQuantity</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
 					</tr>
 				}
 			</tbody>

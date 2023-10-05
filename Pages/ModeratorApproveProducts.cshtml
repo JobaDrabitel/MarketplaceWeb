@@ -134,7 +134,10 @@
 
 
 	<div class="col-md-12">
-
+		@if (Model.ApproveResult != null)
+		{
+			<div class="alert alert-success">@Model.ApproveResult</div>
+		}
 		<table class="table">
 			<thead>
 				<tr>
@@ -144,6 +147,7 @@
 					<th>Price</th>
 					<th>StockQuantity</th>
 					<th>CreatedAt</th>
+					<th>Action</th> <!-- Добавляем заголовок для кнопки "Approve" -->
 				</tr>
 			</thead>
 			<tbody>
@@ -156,6 +160,12 @@
 						<td><a href="/ProductInfo/@item.ProductId">@item.Price</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.StockQuantity</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
+						<td>
+							<form method="post" asp-page-handler="ApproveProduct">
+								<input type="hidden" name="id" value="@item.ProductId" />
+								<button type="submit" name="action" value="approve" class="btn btn-primary">Approve</button>
+							</form>
+						</td>
 					</tr>
 				}
 			</tbody>

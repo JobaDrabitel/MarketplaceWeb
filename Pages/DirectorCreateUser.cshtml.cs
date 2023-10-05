@@ -6,9 +6,11 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
 using Marketplace_Web.Models;
 using System.Net.Http;
+using System.Globalization;
 
 public class DirectorCreateUser : PageModel
 {
+	public string CreateResult { get; set; }
 	public List<Role> Roles = new List<Role>();
 	[BindProperty]
 	public string FirstName { get; set; }
@@ -92,11 +94,12 @@ public class DirectorCreateUser : PageModel
 
 			if (response.IsSuccessStatusCode && response.Content != null)
 			{
-				
+				CreateResult = "Пользователь успешно создан!";
 			}
 			else if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
 			{
-				ModelState.AddModelError(string.Empty, "Этот email уже используется.");
+				ModelState.AddModelError(string.Empty, "Этот email уже используется или поля некорректны.");
+				CreateResult = "Ошибка при добавлении пользователя";
 			}
 			return Page();
 		}
