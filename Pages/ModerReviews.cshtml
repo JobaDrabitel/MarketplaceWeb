@@ -151,12 +151,12 @@
 				@foreach (var item in Model.Reviews)
 				{
 					<tr>
-						<td>@item.ReviewId</td>
-						<td>@item.ProductId</td>
-						<td>@item.Rating</td>
-						<td>@item.Comment</td>
-						<td>@item.UserId</td>
-						<td>@item.CreatedAt</td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.ReviewId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Rating</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Comment</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.UserId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
 					</tr>
 				}
 			</tbody>

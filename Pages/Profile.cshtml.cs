@@ -84,6 +84,7 @@ namespace Marketplace_Web
         {
             if (!ModelState.IsValid)
             {
+                await OnGetAsync();
                 return Page();
             }
 
@@ -93,6 +94,7 @@ namespace Marketplace_Web
                 LastName,
                 Email,
                 PasswordHash = Password,
+                Phone,
                 ImageUrl
             };
 
@@ -113,6 +115,7 @@ namespace Marketplace_Web
                         FirstName = updateData.FirstName,
                         LastName = updateData.LastName,
                         Email = updateData.Email,
+                        Phone = updateData.Phone,
                         PasswordHash = updateData.PasswordHash,
                         ImageUrl = updateData.ImageUrl
                     };

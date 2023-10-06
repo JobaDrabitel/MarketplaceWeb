@@ -35,6 +35,7 @@ namespace Marketplace_Web.Pages
 					{
 						var itemsJson = await response.Content.ReadAsStringAsync();
 						Products = JsonSerializer.Deserialize<List<Product>>(itemsJson);
+						Products.RemoveAll(product => product.UpdatedAt == null);
 					}
 					else
 					{
@@ -62,7 +63,7 @@ namespace Marketplace_Web.Pages
 				using (var httpClient = new HttpClient())
 				{
 					// Замените apiUrl на URL вашего API для удаления элемента
-					var apiUrl = $"http://localhost:8080/api/product/deletebyid/{ItemId}";
+					var apiUrl = $"http://localhost:8080/api/product/delete/{ItemId}";
 					var response = await httpClient.DeleteAsync(apiUrl);
 
 					if (response.IsSuccessStatusCode)

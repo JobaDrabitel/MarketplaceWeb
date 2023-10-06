@@ -41,7 +41,7 @@ namespace Marketplace_Web.Pages
 						{
 							var itemsJson = await response.Content.ReadAsStringAsync();
 							Products = JsonSerializer.Deserialize<List<Product>>(itemsJson);
-							Products.RemoveAll(product => product.UpdatedAt != null);
+							Products.RemoveAll(product => product.UpdatedAt != null || product.StockQuantity == 0);
 					}
 						else
 						{

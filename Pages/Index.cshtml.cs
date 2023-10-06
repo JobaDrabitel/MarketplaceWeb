@@ -59,7 +59,7 @@ namespace Marketplace_Web.Pages
 				var response = await httpClient.GetAsync(apiUrl);
 				var productsJson = await response.Content.ReadAsStringAsync();
 				var products = JsonSerializer.Deserialize<List<Product>>(productsJson);
-				products.RemoveAll(product => product.UpdatedAt == null);
+				products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
 				return products;
 			}
 		}

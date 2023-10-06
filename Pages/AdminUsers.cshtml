@@ -157,6 +157,7 @@
 					<th>LastName</th>
 					<th>Phone</th>
 					<th>Email</th>
+					<th>Delete</th>
 					<!-- Добавьте другие заголовки столбцов здесь -->
 				</tr>
 			</thead>
@@ -169,6 +170,12 @@
 						<td>@item.LastName</td>
 						<td>@item.Phone</td>
 						<td>@item.Email</td>
+						<td>
+							<form method="post">
+								<input type="hidden" name="itemId" value="@item.UserId" /> <!-- Здесь передаем ReviewId -->
+								<button type="submit" class="btn btn-danger">Delete</button>
+							</form>
+						</td>
 					</tr>
 				}
 			</tbody>

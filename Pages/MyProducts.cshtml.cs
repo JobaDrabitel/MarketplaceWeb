@@ -8,7 +8,7 @@ namespace Marketplace_Web.Pages
 {
     public class MyProductsModel : PageModel
     {
-        public ICollection<Product> Products { get; set; }
+        public List<Product> Products { get; set; } = new List<Product>();
         public async Task<IActionResult> OnGetAsync()
         {
             // Получите текущего пользователя из сессии (псевдокод, вам нужно реализовать получение из сессии)
@@ -34,8 +34,9 @@ namespace Marketplace_Web.Pages
                 {
                     var jsonResponse = await response.Content.ReadAsStringAsync();
                     var products = JsonSerializer.Deserialize<List<Product>>(jsonResponse);
+					products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
                     Products = products;
-                }
+				}
                 else
                 {
                     throw new Exception();
@@ -46,12 +47,10 @@ namespace Marketplace_Web.Pages
         }
         public async Task OnPostDeleteProductAsync(int productId)
         {
-			var apiUrl = $"http://localhost:8080/api/product/deletebyid/{productId}";
+			var apiUrl = $"http://localhost:8080/api/product/delete/{productId}";
 			using (var httpClient = new HttpClient())
 			{
-				var response = await httpClient.DeleteAsync(apiUrl);
-
-                
+				var response = await httpClient.GetAsync(apiUrl);     
 			}
             await OnGetAsync();
 		}

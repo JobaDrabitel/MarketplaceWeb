@@ -157,6 +157,7 @@
 					<th>Price</th>
 					<th>StockQuantity</th>
 					<th>CreatedAt</th>
+					<th>Delete</th>
 					<!-- Добавьте другие заголовки столбцов здесь -->
 				</tr>
 			</thead>
@@ -170,6 +171,12 @@
 						<td><a href="/ProductInfo/@item.ProductId">@item.Price</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.StockQuantity</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
+						<td>
+							<form method="post">
+								<input type="hidden" name="itemId" value="@item.ProductId" /> <!-- Здесь передаем ReviewId -->
+								<button type="submit" class="btn btn-danger">Delete</button>
+							</form>
+						</td>
 					</tr>
 				}
 			</tbody>

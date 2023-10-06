@@ -157,19 +157,25 @@
 					<th>Comment</th>
 					<th>UserId</th>
 					<th>CreatedAt</th>
-					<!-- Добавьте другие заголовки столбцов здесь -->
+					<th>Action</th> <!-- Добавляем заголовок для столбца с кнопкой -->
 				</tr>
 			</thead>
 			<tbody>
 				@foreach (var item in Model.Reviews)
 				{
 					<tr>
-						<td>@item.ReviewId</td>
-						<td>@item.ProductId</td>
-						<td>@item.Rating</td>
-						<td>@item.Comment</td>
-						<td>@item.UserId</td>
-						<td>@item.CreatedAt</td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.ReviewId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Rating</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Comment</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.UserId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
+						<td>
+							<form method="post">
+								<input type="hidden" name="itemId" value="@item.ReviewId" /> <!-- Здесь передаем ReviewId -->
+								<button type="submit" class="btn btn-danger">Delete</button>
+							</form>
+						</td>
 					</tr>
 				}
 			</tbody>

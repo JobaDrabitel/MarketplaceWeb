@@ -24,13 +24,13 @@ namespace Marketplace_Web.Pages
                     var productsJson = await response.Content.ReadAsStringAsync();
                     var products = JsonSerializer.Deserialize<List<Product>>(productsJson);
 					if (products != null)
-						if (String.IsNullOrEmpty(searchTerm))
+						if (String.IsNullOrEmpty(searchTerm) && categoryId != 0)
 							foreach (var product in products)
 							{
 								if (product.CategoryId == categoryId)
 									Products.Add(product);
 							}
-						else if (categoryId == 0)
+						else if (categoryId == 0 && !String.IsNullOrEmpty(searchTerm))
 							foreach (var product in products)
 							{
 								if (product.Name.ToUpper().Contains(searchTerm.ToUpper()))
@@ -44,7 +44,7 @@ namespace Marketplace_Web.Pages
 							}
 						else
 							Products = products;
-					Products.RemoveAll(product => product.UpdatedAt == null);
+					Products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
 				}
                 else
                 {
@@ -69,8 +69,10 @@ namespace Marketplace_Web.Pages
 						foreach (var product in products)
 						{
 							if (product.CategoryId == Category)
-								Products.Add(product);	
+								Products.Add(product);
+						
 						}
+					Products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
 				}
 				else
 				{
