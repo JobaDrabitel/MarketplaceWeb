@@ -59,7 +59,7 @@ namespace Marketplace_Web {
 			// Отправьте данные на API
 			using (var httpClient = _clientFactory.CreateClient())
 			{
-				var apiUrl = "http://localhost:8080/api/product/create";
+				var apiUrl = $"http://localhost:8080/api/product/create/{sellerUserId}";
 				var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
 				var response = await httpClient.PutAsync(apiUrl, content);
 
