@@ -1,4 +1,4 @@
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -10,7 +10,6 @@ namespace Marketplace_Web.Pages
 	{
 		public ICollection<Order> Orders { get; set; }
 		public ICollection<Product> Products { get; set; }
-		public ICollection<OrderItem> OrderItems { get; set; }
 		public async Task<IActionResult> OnGetAsync()
 		{
 			// Получите текущего пользователя из сессии (псевдокод, вам нужно реализовать получение из сессии)

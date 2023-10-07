@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Marketplace_Web.Models;
+namespace API_Marketplace_.net_7_v1.Models;
 
 public partial class Role
 {
     public int RoleId { get; set; }
 
-    public string RoleName { get; set; } = null!;
+    public string? RoleName { get; set; }
+
+    public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

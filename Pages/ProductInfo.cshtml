@@ -145,7 +145,7 @@
 <p>Price: $@Model.Product.Price</p>
 <p>Stock Quantity: @Model.Product.StockQuantity</p>
 <p>Category: @Model.Category</p>
-<p>Seller User ID: @Model.Product.SellerUserId</p>
+<p>Seller User ID: @Model.Product.UsersNavigation</p>
 <p>Created At: @Model.Product.CreatedAt</p>
 <p>Updated At: @Model.Product.UpdatedAt</p>
 		<form method="post" asp-page-handler="AddToCart">
@@ -231,7 +231,7 @@
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">@advice.Category</p>
+												<p class="product-category">@advice.Categories.First().CategoryId</p>
 												<h3 class="product-name">@advice.Name</h3>
 												<h4 class="product-price">$@advice.Price</h4>
 											</div>

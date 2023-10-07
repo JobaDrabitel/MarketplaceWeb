@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using System.Net.Http;
 using System.Globalization;
 

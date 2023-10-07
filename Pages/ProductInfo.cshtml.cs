@@ -1,4 +1,4 @@
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text;
@@ -43,12 +43,12 @@ namespace Marketplace_Web.Pages
                     return NotFound(); // Если продукт не найден
                 }
 
-                var categoryRespose = await client.GetAsync($"http://localhost:8080/api/category/getbyid/{Product.CategoryId}");
+                var categoryRespose = await client.GetAsync($"http://localhost:8080/api/category/getbyid/{Product.Categories.First().CategoryId}");
                 var categoryJson = await categoryRespose.Content.ReadAsStringAsync();
                 try
                 {
                     Category = JsonSerializer.Deserialize<Category>(categoryJson).Name;
-                    var sellerResponse = await client.GetAsync($"http://localhost:8080/api/user/getbyid/{Product.SellerUserId}");
+                    var sellerResponse = await client.GetAsync($"http://localhost:8080/api/user/getbyid/{Product.UsersNavigation.First().UserId}");
                     var sellerJson = await sellerResponse.Content.ReadAsStringAsync();
                     Seller = JsonSerializer.Deserialize<User>(sellerJson);
                 }
@@ -75,7 +75,7 @@ namespace Marketplace_Web.Pages
                     var userJson = await userResponse.Content.ReadAsStringAsync();
                     Users.Add(JsonSerializer.Deserialize<User>(userJson));
                 }
-                await GetAdvices(Product.CategoryId);
+                await GetAdvices(Product.Categories.First().CategoryId);
                 return this.Page();
             }
 

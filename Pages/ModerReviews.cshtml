@@ -138,7 +138,6 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th>ID</th>
 					<th>ProductId</th>
 					<th>Rating</th>
 					<th>Comment</th>
@@ -151,7 +150,6 @@
 				@foreach (var item in Model.Reviews)
 				{
 					<tr>
-						<td><a href="/ProductInfo/@item.ProductId">@item.ReviewId</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.Rating</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.Comment</a></td>

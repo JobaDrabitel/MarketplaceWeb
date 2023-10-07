@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -62,22 +62,9 @@ namespace Marketplace_Web
         public async Task<IActionResult> OnGetAsync()
         {
             var userId = HttpContext.Session.GetInt32("UserId");
-            var apiUrl = $"http://localhost:8080/api/user/getbyid/{userId}";
-            using (var httpClient = new HttpClient())
-            {
-                var response = await httpClient.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode && response.Content != null)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    User = JsonSerializer.Deserialize<User>(jsonResponse);
-                }
-                else if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
-                {
-                    ModelState.AddModelError(string.Empty, "Этот email уже используется.");
-                }
-                return Page();
-            }
+            User = UserSessions.GetUser(HttpContext.Session);
+            return Page();
+            
         }
 
         public async Task<IActionResult> OnPostAsync()

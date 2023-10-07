@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Marketplace_Web.Models;
+namespace API_Marketplace_.net_7_v1.Models;
 
 public partial class Order
 {
@@ -9,11 +9,15 @@ public partial class Order
 
     public int? UserId { get; set; }
 
-    public DateTime? OrderDate { get; set; }
+    public int? ProductId { get; set; }
+
+    public DateTime? CreateTime { get; set; }
+
+    public int? TotalQuantity { get; set; }
 
     public decimal? TotalAmount { get; set; }
 
-    public virtual ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
+    public virtual Product? Product { get; set; }
 
     public virtual User? User { get; set; }
 }

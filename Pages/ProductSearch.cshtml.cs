@@ -1,4 +1,4 @@
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
@@ -27,7 +27,7 @@ namespace Marketplace_Web.Pages
 						if (String.IsNullOrEmpty(searchTerm) && categoryId != 0)
 							foreach (var product in products)
 							{
-								if (product.CategoryId == categoryId)
+								if (product.Categories.First().CategoryId == categoryId)
 									Products.Add(product);
 							}
 						else if (categoryId == 0 && !String.IsNullOrEmpty(searchTerm))
@@ -39,7 +39,7 @@ namespace Marketplace_Web.Pages
 						else if (!String.IsNullOrEmpty(searchTerm) && categoryId != 0)
 							foreach (var product in products)
 							{
-								if (product.Name.ToUpper().Contains(searchTerm.ToUpper()) && product.CategoryId == categoryId)
+								if (product.Name.ToUpper().Contains(searchTerm.ToUpper()) && product.Categories.First().CategoryId == categoryId)
 									Products.Add(product);
 							}
 						else
@@ -68,7 +68,7 @@ namespace Marketplace_Web.Pages
 					if (products != null)
 						foreach (var product in products)
 						{
-							if (product.CategoryId == Category)
+							if (product.Categories.First().CategoryId == Category)
 								Products.Add(product);
 						
 						}

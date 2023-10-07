@@ -1,5 +1,5 @@
 using Marketplace_Web;
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using Marketplace_Web.Pages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -68,19 +68,19 @@ public class LoginModel : PageModel
 					HttpContext.Session.SetString("FirstName", user.FirstName);
 					HttpContext.Session.SetString("LastName", user.LastName);
 					HttpContext.Session.SetString("Email", user.Email);
-                    HttpContext.Session.SetInt32("RoleId", (int)user.RoleId);
+                    HttpContext.Session.SetInt32("RoleId", (int)user.Roles.First().RoleId);
 					if (user.ImageUrl != null)
 						HttpContext.Session.SetString("ImageUrl", user.ImageUrl);
                     UserSessions.SetUser(HttpContext.Session, user);
 				}
                 
-                if (user != null && user.RoleId == 1)
+                if (user != null && user.Roles.First().RoleId == 1)
                     return RedirectToPage("/Index");
-                else if (user != null && user.RoleId == 2)
+                else if (user != null && user.Roles.First().RoleId == 2)
                     return RedirectToPage("/Moderator");
-                else if (user != null && user.RoleId == 3)
+                else if (user != null && user.Roles.First().RoleId == 3)
                     return RedirectToPage("/Admin");
-				else if (user != null && user.RoleId == 4)
+				else if (user != null && user.Roles.First().RoleId == 4)
 					return RedirectToPage("/Director");
 				else return Page();
 			}

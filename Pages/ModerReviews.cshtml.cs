@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Collections;
 using System.Linq;
 using System.Text.Json;
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Marketplace_Web.Pages

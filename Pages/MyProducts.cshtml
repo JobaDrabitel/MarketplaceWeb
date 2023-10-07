@@ -169,7 +169,7 @@
 							</div>
 						</div>
 						<div class="product-body">
-							<p class="product-category">@product.Category</p>
+							<p class="product-category">@product.Categories.First().CategoryId</p>
 							<h3 class="product-name"><a href="/ProductInfo/@product.ProductId">@product.Name</a></h3>
 							<h4 class="product-price">$@product.Price</h4>
 						</div>

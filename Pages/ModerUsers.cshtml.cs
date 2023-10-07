@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Collections;
 using System.Linq;
 using System.Text.Json;
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using System.Reflection.Metadata.Ecma335;
 
 namespace Marketplace_Web.Pages
@@ -37,7 +37,7 @@ namespace Marketplace_Web.Pages
 						var itemsJson = await response.Content.ReadAsStringAsync();
 						Users = JsonSerializer.Deserialize<List<User>>(itemsJson);
 						foreach (var user in Users)
-							if (user.RoleId!= 1) { Users.Remove(user); }
+							if (user.Roles.First().RoleId!= 1) { Users.Remove(user); }
 					}
 					else
 					{

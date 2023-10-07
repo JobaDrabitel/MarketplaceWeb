@@ -4,7 +4,7 @@ using System.Text.Json;
 using System.Collections;
 using System.Linq;
 using System.Text.Json;
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 
 namespace Marketplace_Web.Pages
 {
@@ -21,7 +21,6 @@ namespace Marketplace_Web.Pages
 			public List<User> Users { get; private set; }  = new List<User>();
 			public List<Order> Orders { get; private set; }  = new List<Order>();
 			public List<Category> Categories { get; private set; }  = new List<Category>();
-			public List<OrderItem> OrderItems { get; private set; }  = new List<OrderItem>();
 			public List<Review> Reviews { get; private set; }  = new List<Review>();
 			public List<Role> Roles { get; private set; }  = new List<Role>();
 			public List<Product> Products { get; private set; } = new List<Product>();

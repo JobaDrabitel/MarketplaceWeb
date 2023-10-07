@@ -2,7 +2,7 @@ using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Marketplace_Web.Models;
+using API_Marketplace_.net_7_v1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
@@ -32,9 +32,9 @@ namespace Marketplace_Web {
 			}
 
 			// Получите SellerUserId из сессии
-			var sellerUserId = HttpContext.Session.GetInt32("UserId");
+			var sellerUser = UserSessions.GetUser(HttpContext.Session);
 
-			if (!sellerUserId.HasValue)
+			if (sellerUser == null)
 			{
 				// Пользователь не авторизован, выполните действия по вашему усмотрению
 				return RedirectToPage("/Login"); // Например, перенаправьте на страницу входа
@@ -45,11 +45,11 @@ namespace Marketplace_Web {
 			{
 				Name = Product.Name,
 				Description = Product.Description,
-				CategoryId = Product.CategoryId,
+				Categories = Product.Categories,
 				Price = Product.Price,
 				ImageUrl = Product.ImageUrl,
 				StockQuantity = Product.StockQuantity,
-				SellerUserId = sellerUserId.Value,
+				UsersNavigation = new List<User> { sellerUser },
 				CreatedAt = DateTime.Now,
 			};
 
