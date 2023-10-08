@@ -1,28 +1,30 @@
-using API_Marketplace_.net_7_v1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using System.Text;
 using System.Diagnostics.Contracts;
+using Microsoft.EntityFrameworkCore;
+using Marketplace_Web.Models;
 
 namespace Marketplace_Web.Pages
 {
     public class ProductSearchModel : PageModel
     {
-        public int CategoryId { get; set; }
+		Marketplace1Context _context = new Marketplace1Context();
+		public int CategoryId { get; set; }
         public List<Product>? Products { get; set; } = new List <Product>();
         public async Task<IActionResult> OnPostAsync(string searchTerm, int categoryId)
         {
-            CategoryId = categoryId;
-            using (var httpClient = new HttpClient())
-            {
-                var apiUrl = "http://localhost:8080/api/product/getall";
-                var response = await httpClient.GetAsync(apiUrl);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var productsJson = await response.Content.ReadAsStringAsync();
-                    var products = JsonSerializer.Deserialize<List<Product>>(productsJson);
+			var currentRole = HttpContext.Session.GetInt32("RoleId");
+			var user = UserSessions.GetUser(HttpContext.Session);
+			if (user != null && currentRole == 2)
+				return RedirectToPage("/Moderator");
+			else if (user != null && currentRole == 3)
+				return RedirectToPage("/Admin");
+			else if (user != null && currentRole == 4)
+				return RedirectToPage("/Director");
+			CategoryId = categoryId;
+                    var products = await _context.Products.ToListAsync();
 					if (products != null)
 						if (String.IsNullOrEmpty(searchTerm) && categoryId != 0)
 							foreach (var product in products)
@@ -45,38 +47,20 @@ namespace Marketplace_Web.Pages
 						else
 							Products = products;
 					Products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
-				}
-                else
-                {
-                }
-            }
-
+				
             return Page();
+               
+            
+
         }
 		public async Task<IActionResult> OnGet(int Category)
 		{
 			CategoryId = Category;
-			using (var httpClient = new HttpClient())
+			var products = await _context.Products.ToListAsync();
+			foreach (var product in products)
 			{
-				var apiUrl = "http://localhost:8080/api/product/getall";
-				var response = await httpClient.GetAsync(apiUrl);
-
-				if (response.IsSuccessStatusCode)
-				{
-					var productsJson = await response.Content.ReadAsStringAsync();
-					var products = JsonSerializer.Deserialize<List<Product>>(productsJson);
-					if (products != null)
-						foreach (var product in products)
-						{
-							if (product.Categories.First().CategoryId == Category)
-								Products.Add(product);
-						
-						}
-					Products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
-				}
-				else
-				{
-				}
+				if (product.Categories.First().CategoryId == CategoryId)
+					Products.Add(product);
 			}
 			return Page();
 		}

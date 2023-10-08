@@ -137,6 +137,15 @@
 
 
 <div class="col-md-12">
+		@if (Model.OrderSuccess == false && ModelState.ErrorCount>0)
+		{
+			<div class="alert alert-danger">Ошибка при оформлении товара, товара нет в наличии</div>
+		}
+		@if (Model.OrderSuccess == true)
+		{
+			<div class="alert alert-success">Товар успешно оформлен</div>
+		}
+
 					<div class="row">
 						<div class="text-center">
 							<form method="post" asp-page-handler="PlaceOrder">
@@ -144,41 +153,62 @@
 							</form>
 						</div>
 					</div>
-    <div class="row">
-        <div class="products-tabs">
-            <!-- tab -->
-            <div id="tab1" class="tab-pane active">
-                <div class="products-slick" data-nav="#slick-nav-1">
-                    @foreach (var product in Model.Products)
-                    {
-                        <div class="col-md-2">
-                            <!-- Один товар занимает 3/12 (или 25%) ширины контейнера -->
-                            <div class="product">
-                                <div class="product-img">
-                                    <img src="@product.ImageUrl" alt="@product.Name" width="100" height="200">
-                                    <div class="product-label">
-                                        <span class="new">NEW</span>
-                                    </div>
-                                </div>
-                                <div class="product-body">
-										<p class="product-category">@product.Categories.First().CategoryId</p>
-                                    <h3 class="product-name"><a href="#">@product.Name</a></h3>
-                                    <h4 class="product-price">$@product.Price</h4>
-                                </div>
-                            </div>
-								<div class="product-delete-button">
-									<form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.ProductId">
-										<button type="submit" class="btn btn-danger">Удалить</button>
-									</form>
+		<div class="section">
+			<!-- container -->
+			<div class="container">
+				<div class="col-md-12">
+					<div class="row">
+						<div class="products-tabs">
+							<!-- tab -->
+							<div id="tab1" class="tab-pane active">
+								<div class="products-slick" data-nav="#slick-nav-1">
+									@foreach (var product in Model.Products)
+									{
+										<div class="col-md-2">
+											<!-- Оборачиваем весь товар в ссылку -->
+											<a href="/ProductInfo/@product.ProductId" class="product-link">
+												<div class="product">
+													<div class="product-img">
+														<img src="@product.ImageUrl" alt="@product.Name" height="200" width="200">
+														<div class="product-label">
+															<span class="new">NEW</span>
+														</div>
+													</div>
+													<div class="product-body">
+														<p class="product-category">@product.Categories.First().CategoryId</p>
+														<h3 class="product-name"><a href="#">@product.Name</a></h3>
+														<h4 class="product-price">$@product.Price</h4>
+
+
+													</div>
+													<div class="add-to-cart">
+														<a href="/ProductInfo/@product.ProductId" class="product-link">
+															<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Просмотреть продукт</button>
+														</a>
+													</div>
+												</div>
+											</a>
+											<div class="product-delete-button">
+												<form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.ProductId">
+													<button type="submit" class="btn btn-danger">Удалить</button>
+												</form>
+											</div>
+										</div>
+
+									}
+									@if (Model.Products.Count() == 0)
+									{
+										<h1>Sorry, nothing here</h1>
+									}
 								</div>
-                        </div>
-                    }
-						
-                </div>
-                <div id="slick-nav-1" class="products-slick-nav"></div>
-            </div>
-        </div>
-    </div>
+								<div id="slick-nav-1" class="products-slick-nav"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+				</div>
+				</div>
+				
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/slick.min.js"></script>
@@ -187,77 +217,6 @@
 	<script src="js/main.js"></script>
 	</div>
 
-<footer id="footer">
-	<!-- top footer -->
-	<div class="section">
-		<!-- container -->
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">About Us</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-						<ul class="footer-links">
-							<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-							<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-							<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="clearfix visible-xs"></div>
 
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Information</h3>
-						<ul class="footer-links">
-							<li><a href="https://vk.com/pizzamozarellarellarellarella">About Us</a></li>
-							<li><a href="https://vk.com/pizzamozarellarellarellarella">Contact Us</a></li>
-							<li><a href="https://vk.com/pizzamozarellarellarellarella">Privacy Policy</a></li>
-							<li><a href="https://vk.com/pizzamozarellarellarellarella">Orders and Returns</a></li>
-							<li><a href="https://vk.com/pizzamozarellarellarellarella">Terms & Conditions</a></li>
-						</ul>
-					</div>
-				</div>
-
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Service</h3>
-						<ul class="footer-links">
-							<li><a href="https://vk.com/pizzamozarellarellarellarella">Help</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
-	</div>
-	<div id="bottom-footer" class="section">
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-12 text-center">
-					<ul class="footer-payments">
-						<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-cc-visa"></i></a></li>
-						<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-credit-card"></i></a></li>
-						<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-cc-paypal"></i></a></li>
-						<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-cc-mastercard"></i></a></li>
-						<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-cc-discover"></i></a></li>
-						<li><a href="https://vk.com/pizzamozarellarellarellarella"><i class="fa fa-cc-amex"></i></a></li>
-					</ul>
-					<span class="copyright">
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-					</span>
-				</div>
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
-	</div>
-	<!-- /bottom footer -->
-</footer>
 </body>
 </html>

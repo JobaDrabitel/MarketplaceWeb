@@ -1,7 +1,5 @@
 ﻿@page
-@model Marketplace_Web.Pages.ModeratorModel
-@{
-}
+@model ModeratorCancelledOrdersModel;
 <head>
 	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
@@ -133,24 +131,59 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
-
 	<div class="container">
+	<a href="/Admin">To Admin Panel</a>
+	<div class="col-md-12">
+		@if (Model.ApproveResult != null)
+		{
+			<div class="alert alert-success">@Model.ApproveResult</div>
+		}
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Product</th>
+					<th>CreatedAt</th>
+					<th>Buyer</th>
+					<th>Seller</th>
+					<th>Отклонить возвраст</th>
+					<th>Подтвердить возврат</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Orders)
+				{
+					<tr>
+						<td><a href="/OrderInfo/@item.OrderId">@item.OrderId</a></td>
+						<td><a href="/OrderInfo/@item.OrderId">@item.Product.ProductId</a></td>
+						<td><a href="/OrderInfo/@item.OrderId">@item.CreateTime</a></td>
+						<td><a href="/OrderInfo/@item.OrderId">@item.User.FirstName</a></td>
+						<td><a href="/OrderInfo/@item.OrderId">@item.Product.Users.First().FirstName</a></td>
+						<td>
+							<form method="post" asp-page-handler="ApproveProduct">
+								<input type="hidden" name="id" value="@item.ProductId" />
+								<button type="submit" name="action" value="approve" class="btn btn-primary">Отклонить</button>
+							</form>
+						</td>
+						<td>
+							<form method="post" asp-page-handler="RejectProduct">
+								<input type="hidden" name="id" value="@item.ProductId" />
+								<button type="submit" name="action" value="approve" class="btn btn-danger">Подтвердить</button>
+							</form>
+						</td>
 
-		<div class="text-center mt-4">
-			<h3>Функцции:</h3>
-			<ul class="list-group">
-				<li class="list-group-item"><a asp-page="/ModerUsers">Список пользователей</a></li>
-				<li class="list-group-item"><a asp-page="/ModerReview">Список отзывов</a></li>
-				<li class="list-group-item"><a asp-page="/ModerProducts">Список товаров</a></li>
-				<li class="list-group-item"><a asp-page="/ModeratorApproveProducts">Одобрение товаров</a></li>
-				<li class="list-group-item"><a asp-page="/ModeratorCancelledOrders">Отмена заказов</a></li>
-			</ul>
+					</tr>
+				}
+			</tbody>
+		</table>
 		</div>
+
+
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/slick.min.js"></script>
+		<script src="js/nouislider.min.js"></script>
+		<script src="js/jquery.zoom.min.js"></script>
+		<script src="js/main.js"></script>
 	</div>
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/slick.min.js"></script>
-	<script src="js/nouislider.min.js"></script>
-	<script src="js/jquery.zoom.min.js"></script>
-	<script src="js/main.js"></script>
 </body>

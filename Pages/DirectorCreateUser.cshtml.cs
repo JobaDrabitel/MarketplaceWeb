@@ -4,9 +4,9 @@ using System.Text.Json;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
-using API_Marketplace_.net_7_v1.Models;
 using System.Net.Http;
 using System.Globalization;
+using Marketplace_Web.Models;
 
 public class DirectorCreateUser : PageModel
 {
@@ -44,64 +44,46 @@ public class DirectorCreateUser : PageModel
 	[Compare(nameof(Password), ErrorMessage = "Подтверждение пароля должно совпадать с паролем")]
 	[DataType(DataType.Password)]
 	public string ConfirmPassword { get; set; } = null!;
+	Marketplace1Context _context = new Marketplace1Context();
 	public async Task<IActionResult> OnGet(Role selectedRole)
 	{
 		if (HttpContext.Session.GetInt32("RoleId") < 4)
 			return RedirectToPage("/Index");
-		using (HttpClient client = new HttpClient())
-		{
-			var apiUrl = "http://localhost:8080/api/role/getall";
-			var response = await client.GetAsync(apiUrl);
-			var json = await response.Content.ReadAsStringAsync();
-			Roles = JsonSerializer.Deserialize<List<Role>>(json);
-			return Page();
-		}
+		Roles =  _context.Roles.ToList();
+		return Page();
 	}
 	public async Task<IActionResult> OnPost(string selectedRole)
 	{
-		using (HttpClient client = new HttpClient())
-		{
-			var apiUrl = "http://localhost:8080/api/role/getall";
-			var response = await client.GetAsync(apiUrl);
-			var json = await response.Content.ReadAsStringAsync();
-			Roles = JsonSerializer.Deserialize<List<Role>>(json);
-		}
+		Roles = _context.Roles.ToList();
 		if (!ModelState.IsValid)
 		{
 			return Page();
 		}
 		var role = Roles.FirstOrDefault(r => r.RoleName == selectedRole);
-		var regData = new
+		User user = new User()
 		{
-			FirstName,
-			LastName,
-			Email,
+			FirstName = FirstName,
+			LastName = LastName,
+			Email = Email,
 			PasswordHash = Password,
-			role.RoleId,
-			ImageUrl,
-			Phone,
+			Roles = new List<Role>() { role},
+			ImageUrl = ImageUrl,
+			Phone = Phone,
 		};
-
-		var jsonData = JsonSerializer.Serialize(regData);
-
-		using (var httpClient = new HttpClient())
+		if (user != null)
 		{
-			// Замените URL на ваше API-URL
-			var apiUrl = "http://localhost:8080/api/user/create";
+			var newUser = await _context.Users.AddAsync(user);
 
-			var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-			var response = await httpClient.PutAsync(apiUrl, content);
-
-			if (response.IsSuccessStatusCode && response.Content != null)
+			if (newUser != null)
 			{
 				CreateResult = "Пользователь успешно создан!";
 			}
-			else if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
+			else
 			{
 				ModelState.AddModelError(string.Empty, "Этот email уже используется или поля некорректны.");
 				CreateResult = "Ошибка при добавлении пользователя";
 			}
-			return Page();
 		}
+			return Page();
 	}
 }

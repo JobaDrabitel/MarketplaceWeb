@@ -1,57 +1,35 @@
-using API_Marketplace_.net_7_v1.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Text.Json;
 using System.Text;
+using Marketplace_Web.Models;
 
 namespace Marketplace_Web.Pages
 {
     public class MyProductsModel : PageModel
     {
-        public List<Product> Products { get; set; } = new List<Product>();
+		Marketplace1Context _context = new Marketplace1Context();
+		public List<Product> Products { get; set; } = new List<Product>();
         public async Task<IActionResult> OnGetAsync()
         {
-            // Получите текущего пользователя из сессии (псевдокод, вам нужно реализовать получение из сессии)
-            var userId = HttpContext.Session.GetInt32("UserId");
+			var currentRole = HttpContext.Session.GetInt32("RoleId");
+			var user = UserSessions.GetUser(HttpContext.Session);
+			 if (user != null && currentRole == 2)
+				return RedirectToPage("/Moderator");
+			else if (user != null && currentRole == 3)
+				return RedirectToPage("/Admin");
+			else if (user != null && currentRole == 4)
+				return RedirectToPage("/Director");
+			var userId = HttpContext.Session.GetInt32("UserId");
+            user = await _context.Users.FindAsync(userId);
+            Products = user.Products.ToList();
 
-            // Подготовьте JSON-запрос для API
-            var requestData = new
-            {
-                SellerUserId = userId
-            };
-
-            var jsonRequestData = JsonSerializer.Serialize(requestData);
-            var content = new StringContent(jsonRequestData, Encoding.UTF8, "application/json");
-
-            // Замените URL на ваше API-URL
-            var apiUrl = "http://localhost:8080/api/product/getbyfields";
-
-            using (var httpClient = new HttpClient())
-            {
-                var response = await httpClient.PostAsync(apiUrl, content);
-
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var products = JsonSerializer.Deserialize<List<Product>>(jsonResponse);
-					products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
-                    Products = products;
-				}
-                else
-                {
-                    throw new Exception();
-                }
-            }
-
-            return Page();
+			return Page();
         }
         public async Task OnPostDeleteProductAsync(int productId)
         {
-			var apiUrl = $"http://localhost:8080/api/product/delete/{productId}";
-			using (var httpClient = new HttpClient())
-			{
-				var response = await httpClient.GetAsync(apiUrl);     
-			}
+            ProductController productController = new ProductController(_context);
+            var product = await productController.DeleteProduct(productId);
             await OnGetAsync();
 		}
 

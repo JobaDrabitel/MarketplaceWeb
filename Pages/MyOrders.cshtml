@@ -1,7 +1,7 @@
 ﻿@page
 @model MyOrdersModel
 @{
-	ViewData["Title"] = "My Products";
+	ViewData["Title"] = "My Orders";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -154,7 +154,7 @@
 	{
 		<div class="col-md-2">
 			<!-- Оборачиваем весь товар в ссылку -->
-			<a href="/ProductInfo/@order.OrderId" class="product-link">
+			<a href="/OrderInfo/@order.OrderId" class="product-link">
 				<div class="product">
 					<div class="product-img">		
 						<div class="product-label">
@@ -163,14 +163,16 @@
 					</div>
 					<div class="product-body">
 						<p class="product-category"> Номер заказа: @order.OrderId</p>
-						<h3 class="product-name"><a href="#">Дата заказа: @order.CreateTime</a></h3>
-						<h4 class="product-price">$@order.TotalAmount</h4>
-
-						
+						<h3 class="product-name">Дата заказа: @order.CreateTime</h3>
+						<h4 class="product-price">$@order.TotalAmount</h4>	
 					</div>
-					
 				</div>
 			</a>
+				<div class="product-delete-button">
+					<form method="post" asp-page-handler="DeleteOrder" asp-route-orderId="@order.OrderId">
+						<button type="submit" class="btn btn-danger">Отменить</button>
+					</form>
+				</div>
 		</div>
 	}
 </div>

@@ -1,4 +1,4 @@
-﻿using API_Marketplace_.net_7_v1.Models;
+﻿using Marketplace_Web.Models;
 using System.Data;
 
 namespace Marketplace_Web
@@ -22,7 +22,6 @@ namespace Marketplace_Web
 
 		public static User GetUser(this ISession session)
 		{
-			var userId = session.GetInt32("UserId");
 			var firstName = session.GetString("FirstName");
 			var lastName = session.GetString("LastName");
 			var email = session.GetString("Email");
@@ -30,7 +29,6 @@ namespace Marketplace_Web
 			var phone = session.GetString("Phone");
 			return new User
 			{
-				UserId = userId ?? 0,
 				FirstName = firstName,
 				LastName = lastName,
 				Email = email,

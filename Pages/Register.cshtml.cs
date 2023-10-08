@@ -4,9 +4,13 @@ using System.Text.Json;
 using System.Text;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel;
+using Marketplace_Web.Models;
+using Microsoft.EntityFrameworkCore;
+using Marketplace_Web;
 
 public class RegisterModel : PageModel
 {
+	public Marketplace_Web.Models.User User { get; set; } = new User();
     [BindProperty]
     public string FirstName { get; set; }
 
@@ -38,48 +42,39 @@ public class RegisterModel : PageModel
 	[Compare(nameof(Password), ErrorMessage = "Подтверждение пароля должно совпадать с паролем")]
 	[DataType(DataType.Password)]
 	public string ConfirmPassword { get; set; } = null!;
+	public string ImageUrl { get; set; } = null!;
+	Marketplace1Context _context = new Marketplace1Context();
 
 	public async Task<IActionResult> OnPost()
     {
-        if (!ModelState.IsValid)
+        UserController userController = new UserController(_context);
+
+		if (!ModelState.IsValid)
         {
             return Page();
         }
 
-        var regData = new
+        User user = new User
         {
-            FirstName,
-            LastName,
-            Email,
-            PasswordHash = Password,
-            RoleId = 1,
-            Phone,
+            FirstName = FirstName,
+            LastName = LastName,
+            Email = Email,
+			PasswordHash = Password,
+            Roles = new List<Role> { await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "User") },
+            Phone = Phone,
+			ImageUrl = "",
         };
-
-        var jsonData = JsonSerializer.Serialize(regData);
-
-        using (var httpClient = new HttpClient())
+		user = await userController.PostUser(user);
+        if (user!= null)
+		{
+			UserSessions.SetUser(HttpContext.Session, user);
+			return RedirectToPage("/Index");
+		}
+        else
         {
-            // Замените URL на ваше API-URL
-            var apiUrl = "http://localhost:8080/api/user/create";
-
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var response = await httpClient.PutAsync(apiUrl, content);
-
-            if (response.IsSuccessStatusCode && response.Content != null)
-            {
-                var userId = Convert.ToInt32(await response.Content.ReadAsStringAsync());
-                HttpContext.Session.SetInt32("UserId", userId); 
-                HttpContext.Session.SetString("FirstName", FirstName);
-                HttpContext.Session.SetString("LastName", LastName);
-                HttpContext.Session.SetString("Email", Email);
-                return RedirectToPage("/Index");
-            }
-            else if (response.StatusCode == System.Net.HttpStatusCode.NotAcceptable)
-            {
 				ModelState.AddModelError(string.Empty, "Некорректные данные или email уже используется");
-            }
-             return Page(); 
         }
+             return Page(); 
+        
     }
 }

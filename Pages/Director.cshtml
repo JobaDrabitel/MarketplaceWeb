@@ -133,20 +133,19 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
-	<div>
-		<a asp-page="/DirectorCreateUser" class="btn btn-primary">Создать нового пользователя</a>
+	<div class="container">
+	
+		<div class="text-center mt-4">
+			<h3>Функцции:</h3>
+			<ul class="list-group">
+				<li class="list-group-item"><a asp-page="/AdminUsers">Список пользователей</a></li>
+				<li class="list-group-item"><a asp-page="/AdminReviews">Список отзывов</a></li>
+				<li class="list-group-item"><a asp-page="/AdminProducts">Список товаров</a></li>
+				<li class="list-group-item"><a asp-page="/DirectorCreateUser">Создать нового пользователя</a></li>
+			</ul>
+		</div>
 	</div>
 
-	<div>
-		<h3>Списки:</h3>
-		<ul>
-			<li><a asp-page="/AdminUsers">Список пользователей</a></li>
-			<li><a asp-page="/AdminReviews">Список отзывов</a></li>
-			<li><a asp-page="/AdminProducts">Список товаров</a></li>
-			<li><a asp-page="/ModeratorApproveProducts">Одобрение товаров</a></li>
-
-		</ul>
-	</div>
 	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/slick.min.js"></script>

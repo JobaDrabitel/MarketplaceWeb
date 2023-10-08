@@ -131,7 +131,7 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
-
+	<div class="container">
 	<a href="/Admin">To Admin Panel</a>
 	<div class="col-md-12">
 		@if (Model.ApproveResult != null)
@@ -147,7 +147,8 @@
 					<th>Price</th>
 					<th>StockQuantity</th>
 					<th>CreatedAt</th>
-					<th>Action</th> <!-- Добавляем заголовок для кнопки "Approve" -->
+					<th>Approve</th>
+					<th>Reject</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -166,11 +167,18 @@
 								<button type="submit" name="action" value="approve" class="btn btn-primary">Approve</button>
 							</form>
 						</td>
+						<td>
+							<form method="post" asp-page-handler="RejectProduct">
+								<input type="hidden" name="id" value="@item.ProductId" />
+								<button type="submit" name="action" value="approve" class="btn btn-danger">Reject</button>
+							</form>
+						</td>
+
 					</tr>
 				}
 			</tbody>
 		</table>
-
+		</div>
 
 		<script src="js/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>

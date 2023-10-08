@@ -133,8 +133,8 @@
 	</header>
 
 
-	<div class="col-md-12">
-		<a href="/Admin">To Admin Panel</a>
+	<div class="container">
+		<a href="/Moderator">To Moder Panel</a>
 		<table class="table">
 			<thead>
 				<tr>
@@ -150,11 +150,11 @@
 				@foreach (var item in Model.Users)
 				{
 					<tr>
-						<td>@item.UserId</td>
-						<td>@item.FirstName</td>
-						<td>@item.LastName</td>
-						<td>@item.Phone</td>
-						<td>@item.Email</td>
+						<td><a href="/UserInfo/@item.UserId">@item.UserId</a></td>
+						<td><a href="/UserInfo/@item.UserId">@item.FirstName</a></td>
+						<td><a href="/UserInfo/@item.UserId">@item.LastName</a></td>
+						<td><a href="/UserInfo/@item.UserId">@item.Phone</a></td>
+						<td><a href="/UserInfo/@item.UserId">@item.Email</a></td>
 					</tr>
 				}
 			</tbody>

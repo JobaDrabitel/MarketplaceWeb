@@ -252,12 +252,11 @@
 											<div class="product-img">
 												<img src="@product.ImageUrl" alt="@product.Name" height="200" width="200">
 												<div class="product-label">
-													<span class="sale">-30%</span>
 													<span class="new">NEW</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">@product.Categories</p>
+												<p class="product-category">@product.Categories.First().Name</p>
 												<h3 class="product-name">@product.Name</h3>
 												<h4 class="product-price">$@product.Price</h4>
 											</div>

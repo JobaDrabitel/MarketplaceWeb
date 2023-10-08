@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using API_Marketplace_.net_7_v1.Models;
 using System.Net.Http;
 using System.Text.Json;
 using System.Text;
 using Microsoft.Extensions.Caching.Memory;
 using System.Net.Mail;
 using System.Net;
+using Marketplace_Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Marketplace_Web.Pages
 {
@@ -19,49 +20,37 @@ namespace Marketplace_Web.Pages
 		public static  IEnumerable<Category> Categories { get; private set; }
 		public static  IEnumerable<Product> Products { get; private set; }
 		public int Rating { get; private set; }
+		Marketplace1Context _context = new Marketplace1Context();
 		public IndexModel(ILogger<IndexModel> logger)
         {
             _logger = logger;
         }
 
-        public async Task OnGet()
+        public async Task<IActionResult> OnGet()
         {
+			Categories = await GetCategories();
+
 			currentRole = HttpContext.Session.GetInt32("RoleId");
 			user =  UserSessions.GetUser(HttpContext.Session);
-			Categories = await GetCategories();
+			if (user != null && currentRole == 2)
+				return RedirectToPage("/Moderator");
+			else if (user != null && currentRole == 3)
+				return RedirectToPage("/Admin");
+			else if (user != null && currentRole == 4)
+				return RedirectToPage("/Director");
 			Products = await GetProducts();
+			return Page();
 		}
-        private async Task<IEnumerable<Category>> GetCategories()
+        public  async Task<IEnumerable<Category>> GetCategories()
         {
-			var categoriesJson = HttpContext.Session.GetString("Categories");
-
-			if (string.IsNullOrEmpty(categoriesJson))
-				using (var httpClient = new HttpClient())
-                {
-                    var response = await httpClient.GetAsync("http://localhost:8080/api/category/getall");
-					if (response.IsSuccessStatusCode)
-					{
-						categoriesJson = await response.Content.ReadAsStringAsync();
-
-						// Сохраните категории в сессии для последующего использования
-						HttpContext.Session.SetString("Categories", categoriesJson);
-					}
-
-				}
-			var categories = JsonSerializer.Deserialize<IEnumerable<Category>>(categoriesJson);
-			return categories;
+			return await _context.Categories.ToListAsync();
 		}
 		public async Task<IEnumerable<Product>> GetProducts()
 		{
-			using (var httpClient = new HttpClient())
-			{
-				var apiUrl = "http://localhost:8080/api/product/getall";
-				var response = await httpClient.GetAsync(apiUrl);
-				var productsJson = await response.Content.ReadAsStringAsync();
-				var products = JsonSerializer.Deserialize<List<Product>>(productsJson);
-				products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
-				return products;
-			}
+			var products = await _context.Products.ToListAsync();
+			products.RemoveAll(product => product.UpdatedAt == null || product.StockQuantity == 0);
+			return products;
+
 		}
 		public async Task<IActionResult> OnPostAddToCartAsync(int productId)
 		{
@@ -81,13 +70,7 @@ namespace Marketplace_Web.Pages
 		{
 			HttpContext.Session.Clear();
 			user = null;
-
-			if (!string.IsNullOrEmpty(returnUrl))
-			{
-				return Redirect(returnUrl);
-			}
-
-			return RedirectToPage("/index"); 
+			return RedirectToPage("/Index"); 
 		}
 		[HttpPost]
 		public IActionResult OnPostSubscribe(string email)
@@ -128,5 +111,6 @@ namespace Marketplace_Web.Pages
 				Console.WriteLine($"Ошибка при отправке письма: {ex.Message}");
 			}
 		}
+		
 	}
 }

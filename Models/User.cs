@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace API_Marketplace_.net_7_v1.Models;
+namespace Marketplace_Web.Models;
 
 public partial class User
 {
@@ -14,8 +14,10 @@ public partial class User
     public string? Email { get; set; }
 
     public string? PasswordHash { get; set; }
-	public string? Phone { get; set; }
-	public string? ImageUrl { get; set; }
+
+    public string? Phone { get; set; }
+
+    public string? ImageUrl { get; set; }
 
     public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
 

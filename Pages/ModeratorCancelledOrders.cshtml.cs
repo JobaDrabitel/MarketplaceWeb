@@ -2,16 +2,14 @@ using Marketplace_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using System.Text;
-using System.Text.Json;
 
 namespace Marketplace_Web.Pages
 {
-	public class ModeratorApproveProductsModel : PageModel
+	public class ModeratorCancelledOrdersModel : PageModel
 	{
 		public string ApproveResult { get; set; }
 
-		public List<Product> Products { get; private set; } = new List<Product>();
+		public List<Order> Orders { get; private set; } = new List<Order>();
 
 		Marketplace1Context _context = new Marketplace1Context();
 		public async Task<IActionResult> OnGetAsync()
@@ -21,8 +19,8 @@ namespace Marketplace_Web.Pages
 			try
 			{
 
-				Products = await _context.Products.ToListAsync();
-				Products.RemoveAll(product => product.UpdatedAt != null);
+				Orders = await _context.Orders.ToListAsync();
+				Orders.RemoveAll(order => order.TotalQuantity != 0);
 			}
 			catch (Exception ex)
 			{
@@ -32,14 +30,14 @@ namespace Marketplace_Web.Pages
 		}
 		public async Task OnPostApproveProductAsync(string id)
 		{
-			ProductController productController = new ProductController(_context);
+			OrderController orderController = new OrderController(_context);
 			try
 			{
-				var productId = Convert.ToInt32(id);
-				var product = await productController.GetProduct(productId);
-				product.UpdatedAt = DateTime.Now;
-				product = await productController.PutProduct(productId, product);
-				
+				var orderId = Convert.ToInt32(id);
+				var order = await orderController.GetOrder(orderId);
+				order.TotalQuantity = 1;
+				order = await orderController.PutOrder(orderId, order);
+
 			}
 			catch (Exception ex)
 			{
@@ -50,11 +48,11 @@ namespace Marketplace_Web.Pages
 		}
 		public async Task OnPostRejectProductAsync(string id)
 		{
-			ProductController productController = new ProductController(_context);
+			OrderController orderController = new OrderController(_context);
 			try
 			{
-				var productId = Convert.ToInt32(id);
-				var product = productController.DeleteProduct(productId);
+				var orderId = Convert.ToInt32(id);
+				var order = orderController.DeleteOrder(orderId);
 
 			}
 			catch (Exception ex)

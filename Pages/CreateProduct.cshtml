@@ -139,6 +139,8 @@
 		<!-- /MAIN HEADER -->
 	</header>
 	<!-- /HEADER -->
+	<div class="container">
+		<div class="row justify-content-center">
     <h1>Create Product</h1>
     <form method="post">
         <div class="form-group">
@@ -151,7 +153,7 @@
         </div>
         <div class="form-group">
             <label for="CategoryId">Category</label>
-			<select id="CategoryId" name="Product.Categories.First().CategoryId" asp-for="Product.Categories.First().CategoryId" class="form-control" required>
+			<select id="CategoryId" name="CategoryId" asp-for="CategoryId" class="form-control" required>
                 <option value="">Select Category</option>
                 @foreach (var category in IndexModel.Categories)
                 {
@@ -171,8 +173,10 @@
             <label for="StockQuantity">Stock Quantity</label>
             <input type="number" id="StockQuantity" name="Product.StockQuantity" asp-for="Product.StockQuantity" class="form-control" required>
         </div>
-        <button type="submit" class="btn btn-primary">Create Product</button>
+        <button style="margin:10px" type="submit" class="btn btn-primary">Create Product</button>
     </form>
+	</div>
+	</div>
 
 <footer id="footer">
 	<!-- top footer -->
@@ -247,4 +251,10 @@
 	<!-- /bottom footer -->
 </footer>
 </body>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>
 </html>
