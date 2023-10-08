@@ -42,7 +42,9 @@ namespace Marketplace_Web.Pages
 			ReviewController reviewController = new ReviewController(_context);
 			try
 			{
-				var review = reviewController.DeleteReview(ItemId);
+				var review = await reviewController.DeleteReview(ItemId);
+				await _context.SaveChangesAsync();
+
 			}
 			catch (Exception ex)
 			{

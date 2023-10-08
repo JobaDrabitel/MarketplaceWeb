@@ -54,7 +54,7 @@ namespace Marketplace_Web.Pages
 			try
 			{
 				var productId = Convert.ToInt32(id);
-				var product = productController.DeleteProduct(productId);
+				var product = await productController.DeleteProduct(productId);
 
 			}
 			catch (Exception ex)

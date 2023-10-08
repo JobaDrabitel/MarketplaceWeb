@@ -36,7 +36,8 @@ namespace Marketplace_Web.Pages
 			UserController userController = new UserController(_context);
 			try
 			{
-				var review = userController.DeleteUser(ItemId);
+				var review = await userController.DeleteUser(ItemId);
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{

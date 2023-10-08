@@ -37,6 +37,7 @@ namespace Marketplace_Web.Pages
 				var order = await orderController.GetOrder(orderId);
 				order.TotalQuantity = 1;
 				order = await orderController.PutOrder(orderId, order);
+				await _context.SaveChangesAsync();
 
 			}
 			catch (Exception ex)
@@ -52,8 +53,8 @@ namespace Marketplace_Web.Pages
 			try
 			{
 				var orderId = Convert.ToInt32(id);
-				var order = orderController.DeleteOrder(orderId);
-
+				var order = await orderController.DeleteOrder(orderId);
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{

@@ -149,36 +149,41 @@
 
 	<div class="col-md-12">
 
-		<table class="table">
-			<thead>
-				<tr>
-					<th>ProductId</th>
-					<th>Rating</th>
-					<th>Comment</th>
-					<th>UserId</th>
-					<th>CreatedAt</th>
-					<th>Action</th> <!-- Добавляем заголовок для столбца с кнопкой -->
-				</tr>
-			</thead>
-			<tbody>
-				@foreach (var item in Model.Reviews)
-				{
+			<table class="table">
+				<thead>
 					<tr>
-						<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
-						<td><a href="/ProductInfo/@item.ProductId">@item.Rating</a></td>
-						<td><a href="/ProductInfo/@item.ProductId">@item.Comment</a></td>
-						<td><a href="/ProductInfo/@item.ProductId">@item.UserId</a></td>
-						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
-						<td>
-							<form method="post">
-								<input type="hidden" name="itemId" value="@item.UserId" /> <!-- Здесь передаем ReviewId -->
-								<button type="submit" class="btn btn-danger">Delete</button>
-							</form>
-						</td>
+						<th>ProductId</th>
+						<th>Rating</th>
+						<th>Comment</th>
+						<th>User</th>
+						<th>CreatedAt</th>
+						<th>Action</th>
 					</tr>
-				}
-			</tbody>
-		</table>
+				</thead>
+				<tbody>
+					@foreach (var item in Model.Reviews)
+					{
+						<tr>
+							<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
+							<td><a href="/ProductInfo/@item.ProductId">@item.Rating</a></td>
+							<td>
+								<a href="/ProductInfo/@item.ProductId" style="display: block; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+									@item.Comment
+								</a>
+							</td>
+							<td><a href="/UserInfo/@item.UserId">@item.User.Email</a></td>
+							<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
+							<td>
+								<form method="post">
+									<input type="hidden" name="itemId" value="@item.ReviewId" />
+									<button type="submit" class="btn btn-danger">Delete</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+
 
 		<script src="js/jquery.min.js"></script>
 		<script src="js/bootstrap.min.js"></script>

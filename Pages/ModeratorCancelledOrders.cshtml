@@ -161,13 +161,13 @@
 						<td><a href="/OrderInfo/@item.OrderId">@item.Product.Users.First().FirstName</a></td>
 						<td>
 							<form method="post" asp-page-handler="ApproveProduct">
-								<input type="hidden" name="id" value="@item.ProductId" />
+								<input type="hidden" name="id" value="@item.OrderId" />
 								<button type="submit" name="action" value="approve" class="btn btn-primary">Отклонить</button>
 							</form>
 						</td>
 						<td>
 							<form method="post" asp-page-handler="RejectProduct">
-								<input type="hidden" name="id" value="@item.ProductId" />
+									<input type="hidden" name="id" value="@item.OrderId" />
 								<button type="submit" name="action" value="approve" class="btn btn-danger">Подтвердить</button>
 							</form>
 						</td>

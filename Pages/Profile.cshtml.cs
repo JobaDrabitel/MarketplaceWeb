@@ -48,7 +48,6 @@ namespace Marketplace_Web
 		[BindProperty]
 		[DisplayName("Фото профиля")]
 		[DataType(DataType.Url)]
-		[MaxLength(256, ErrorMessage = "Максимальная длина url может быть 256 символов")]
 		public string ImageUrl { get; set; } = null!;
 
 		private readonly IHttpClientFactory _clientFactory;

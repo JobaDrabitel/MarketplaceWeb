@@ -42,6 +42,9 @@ public class RegisterModel : PageModel
 	[Compare(nameof(Password), ErrorMessage = "ѕодтверждение парол€ должно совпадать с паролем")]
 	[DataType(DataType.Password)]
 	public string ConfirmPassword { get; set; } = null!;
+	[BindProperty]
+	[DisplayName("Image URL")]
+	[DataType(DataType.ImageUrl)]
 	public string ImageUrl { get; set; } = null!;
 	Marketplace1Context _context = new Marketplace1Context();
 
@@ -62,7 +65,7 @@ public class RegisterModel : PageModel
 			PasswordHash = Password,
             Roles = new List<Role> { await _context.Roles.FirstOrDefaultAsync(r => r.RoleName == "User") },
             Phone = Phone,
-			ImageUrl = "",
+			ImageUrl = ImageUrl,
         };
 		user = await userController.PostUser(user);
         if (user!= null)

@@ -17,11 +17,10 @@ namespace Marketplace_Web.Pages
 
 		public async Task<IActionResult> OnGetAsync()
 		{
-			if (HttpContext.Session.GetInt32("RoleId") < 2 || HttpContext.Session.GetInt32("RoleId") == null)
+			if (HttpContext.Session.GetInt32("RoleId") < 3 || HttpContext.Session.GetInt32("RoleId") == null)
 				return RedirectToPage("/Index");
 			try
 			{
-
 				Products = await _context.Products.ToListAsync();
 			}
 			catch (Exception ex)
@@ -40,7 +39,8 @@ namespace Marketplace_Web.Pages
 			ProductController productController = new ProductController(_context);
 			try
 			{
-				var product = productController.DeleteProduct(ItemId);
+				var product = await productController.DeleteProduct(ItemId);
+				await _context.SaveChangesAsync();
 			}
 			catch (Exception ex)
 			{

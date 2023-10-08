@@ -72,7 +72,11 @@ public class DirectorCreateUser : PageModel
 		};
 		if (user != null)
 		{
-			var newUser = await _context.Users.AddAsync(user);
+			try
+			{
+				var newUser = await _context.Users.AddAsync(user);
+				await _context.SaveChangesAsync();
+			
 
 			if (newUser != null)
 			{
@@ -83,6 +87,8 @@ public class DirectorCreateUser : PageModel
 				ModelState.AddModelError(string.Empty, "Этот email уже используется или поля некорректны.");
 				CreateResult = "Ошибка при добавлении пользователя";
 			}
+			}
+			catch (Exception ex) { return null; }
 		}
 			return Page();
 	}
