@@ -138,10 +138,11 @@
 		<table class="table">
 			<thead>
 				<tr>
+					<th> Id</th>
 					<th>ProductId</th>
 					<th>Rating</th>
 					<th>Comment</th>
-					<th>UserId</th>
+					<th>User</th>
 					<th>CreatedAt</th>
 					<!-- Добавьте другие заголовки столбцов здесь -->
 				</tr>
@@ -150,10 +151,14 @@
 				@foreach (var item in Model.Reviews)
 				{
 					<tr>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Rating</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.Rating</a></td>
-						<td><a href="/ProductInfo/@item.ProductId">@item.Comment</a></td>
-						<td><a href="/ProductInfo/@item.ProductId">@item.UserId</a></td>
+						<td>
+						<a href="/ProductInfo/@item.ProductId" style="display: block; max-width: 100px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+									@item.Comment
+								</a></td>
+						<td><a href="/UserInfo/@item.UserId">@item.User.Email</a></td>
 						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
 					</tr>
 				}

@@ -23,7 +23,7 @@ namespace Marketplace_Web.Pages
 			{
 
 				Products = await _context.Products.ToListAsync();
-				Products.RemoveAll(product => product.UpdatedAt != null);
+				Products.RemoveAll(product => product.UpdatedAt == null);
 			}
 			catch (Exception ex)
 			{

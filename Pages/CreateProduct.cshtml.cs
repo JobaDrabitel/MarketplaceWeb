@@ -28,7 +28,10 @@ namespace Marketplace_Web {
 			{
 				return Page();
 			}
-
+			if (Product.Price < 0)
+				Product.Price*=-1;
+			if (Product.StockQuantity < 0)
+				Product.StockQuantity *= -1;
 			// Получите SellerUserId из сессии
 			var userId = HttpContext.Session.GetInt32("UserId");
 			var user = await _context.Users.FindAsync(userId);

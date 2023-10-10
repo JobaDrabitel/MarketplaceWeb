@@ -27,8 +27,9 @@ namespace Marketplace_Web.Pages
 			if (userId != 0 && userId != null)
 			{
 				 user = await _context.Users.FindAsync(userId);
-				if (user!=null)
-                Products = user.ProductsNavigation.ToList();
+				if (user != null)
+					Products = user.ProductsNavigation.ToList();
+				else return RedirectToPage("/Login");
 			}
             return Page();
         }
@@ -42,8 +43,12 @@ namespace Marketplace_Web.Pages
 			ProductController productController = new ProductController(_context);
 			// Получите данные из поля Wishlist или любого другого места, где хранятся выбранные товары
 			List<Product> selectedProducts = await GetSelectedProducts();
-			if (selectedProducts == null)
+			if (selectedProducts.Count() == 0)
+			{
+				ModelState.AddModelError(string.Empty, $"Выберите товар для покупки");
+				OrderSuccess = false;
 				return Page();
+			}
 			foreach (var product in selectedProducts)
 			{
 				if (product.StockQuantity < 1)
