@@ -27,9 +27,8 @@ namespace Marketplace_Web.Pages
 			if (userId != 0 && userId != null)
 			{
 				 user = await _context.Users.FindAsync(userId);
-				if (user != null)
-					Products = user.ProductsNavigation.ToList();
-				else return RedirectToPage("/Login");
+				if (user!=null)
+                Products = user.ProductsNavigation.ToList();
 			}
             return Page();
         }
@@ -38,46 +37,35 @@ namespace Marketplace_Web.Pages
 			await OnGetAsync();
 			return Products;
 		}
-		public async Task<IActionResult> OnPostPlaceOrderAsync()
+		public async Task<IActionResult> OnPostPlaceOrderAsync(int productId, int count)
 		{
 			ProductController productController = new ProductController(_context);
-			// Получите данные из поля Wishlist или любого другого места, где хранятся выбранные товары
 			List<Product> selectedProducts = await GetSelectedProducts();
-			if (selectedProducts.Count() == 0)
+			if (selectedProducts == null)
+				return Page();
+			var product = await  productController.GetProduct(productId);
+
+			if (product.StockQuantity < count)
 			{
-				ModelState.AddModelError(string.Empty, $"Выберите товар для покупки");
+				ModelState.AddModelError(string.Empty, $"Произошла ошибка при оформлении заказа.");
 				OrderSuccess = false;
 				return Page();
 			}
-			foreach (var product in selectedProducts)
-			{
-				if (product.StockQuantity < 1)
-				{
-					ModelState.AddModelError(string.Empty, $"Произошла ошибка при оформлении заказа. Товара {product.Name}  нет в наличии");
-					OrderSuccess = false;
-					return Page();
-				}
-			}
 			try
 			{
-				foreach (var product in selectedProducts)
+				Order order = new Order
 				{
-					Order order = new Order
-					{
 						UserId = HttpContext.Session.GetInt32("UserId"),
 						CreateTime = DateTime.Now,
 						TotalAmount = product.Price,
-						ProductId = product.ProductId,
-						TotalQuantity = 1,
-					};
-
-					// Отправьте заказ и элементы заказа на ваше API
-					_context.Orders.Add(order);
-					product.StockQuantity -= 1;
-					await productController.PutProduct(product.ProductId, product);
-					await _context.SaveChangesAsync();
-					await OnPostDeleteProductAsync(product.ProductId);
-				}
+						ProductId = productId,
+						TotalQuantity = count,
+				};
+				_context.Orders.Add(order);
+				product.StockQuantity -= count;
+				await productController.PutProduct(productId, product);
+				await _context.SaveChangesAsync();
+				await OnPostDeleteProductAsync(product.ProductId);
 			}
 			catch (Exception ex) 
 			{

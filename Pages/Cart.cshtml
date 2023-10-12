@@ -146,13 +146,7 @@
 			<div class="alert alert-success">Товар успешно оформлен</div>
 		}
 
-					<div class="row">
-						<div class="text-center">
-							<form method="post" asp-page-handler="PlaceOrder">
-								<button type="submit" class="btn btn-primary">Оформить покупку</button>
-							</form>
-						</div>
-					</div>
+				
 		<div class="section">
 			<!-- container -->
 			<div class="container">
@@ -165,6 +159,14 @@
 									@foreach (var product in Model.Products)
 									{
 										<div class="col-md-2">
+											<form method="post" asp-page-handler="PlaceOrder" asp-route-productId="@product.ProductId">
+												<div class="input-group">
+													<input type="number" class="form-control" name="count" min="1" max="@product.StockQuantity" value="1">
+													<span class="input-group-btn">
+														<button type="submit" class="btn btn-success">Create Order</button>
+													</span>
+												</div>
+											</form>
 											<!-- Оборачиваем весь товар в ссылку -->
 											<a href="/ProductInfo/@product.ProductId" class="product-link">
 												<div class="product">
