@@ -1,7 +1,10 @@
 ﻿@page
-@model LoginModel
+@model MyOrdersModel
 @{
+	ViewData["Title"] = "My Orders";
 }
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
@@ -12,6 +15,8 @@
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/site.css" />
 </head>
+<!-- Стили для структуры продуктов -->
+
 <body>
 	<!-- HEADER -->
 	<header>
@@ -33,7 +38,7 @@
 				}
 
 				<ul class="header-links pull-right">
-					
+
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -115,12 +120,11 @@
 								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Cart</span>
-									
+
 								</a>
 							</div>
 							<!-- /cart -->
 							<!-- Menu Toogle -->
-							
 							<!-- /Menu Toogle -->
 						</div>
 					</div>
@@ -132,98 +136,55 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
-	</body>
+
 	<!-- /HEADER -->
-<div class="container">
-	<h1>Авторизация</h1>
-<form method="post">
-    <div class="form-group">
-        <label for="Email">Email:</label>
-        <input type="email" id="Email" name="Email" class="form-control" />
-        <span asp-validation-for="Email"></span>
-    </div>
-	
-    <div class="form-group">
-        <label for="Password">Password:</label>
-        <input type="password" id="Password" name="Password" class="form-control" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Авторизация</button>
-		<div class="form-group">
-			<a href="/Register" class="btn-register">Регистрация</a>
+<div class="col-md-12">
+	<div class="section-title">
+		<h3 class="title">My Products</h3>
+		<div class="section-nav">
+			<ul class="section-tab-nav tab-nav">
+				<a asp-page="/CreateProduct" class="btn btn-primary">Create Product</a>
+			</ul>
 		</div>
-</form>
+	</div>
 </div>
 
-<footer id="footer">
-	<!-- top footer -->
-	<div class="section">
-		<!-- container -->
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">About Us</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-						<ul class="footer-links">
-							<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-							<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-							<li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
-						</ul>
+<div class="col-md-12 products-container">
+	@foreach (var order in Model.Orders)
+	{
+		<div class="col-md-2">
+			<!-- Оборачиваем весь товар в ссылку -->
+			<a href="/OrderInfo/@order.OrderId" class="product-link">
+				<div class="product">
+					<div class="product-img">		
+						<div class="product-label">
+							<span class="new">NEW</span>
+						</div>
+					</div>
+					<div class="product-body">
+						<p class="product-category"> Номер заказа: @order.OrderId</p>
+						<h3 class="product-name">Дата заказа: @order.CreateTime</h3>
+						<h4 class="product-price">$@order.TotalAmount</h4>	
 					</div>
 				</div>
-				<div class="clearfix visible-xs"></div>
-
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Information</h3>
-						<ul class="footer-links">
-							<li><a href="#">About Us</a></li>
-							<li><a href="#">Contact Us</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-							<li><a href="#">Orders and Returns</a></li>
-							<li><a href="#">Terms & Conditions</a></li>
-						</ul>
-					</div>
+			</a>
+				<div class="product-delete-button">
+					<form method="post" asp-page-handler="DeleteOrder" asp-route-orderId="@order.OrderId">
+						<button type="submit" class="btn btn-danger">Отменить</button>
+					</form>
 				</div>
-
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Service</h3>
-						<ul class="footer-links">
-							<li><a href="#">Help</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /row -->
 		</div>
-		<!-- /container -->
-	</div>
-	<div id="bottom-footer" class="section">
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-12 text-center">
-					<ul class="footer-payments">
-						<li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
-						<li><a href="#"><i class="fa fa-credit-card"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
-					</ul>
-					<span class="copyright">
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-					</span>
-				</div>
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
-	</div>
-	<!-- /bottom footer -->
-</footer>
+	}
+</div>
+
+</body>
+
+	
+
+</html>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>

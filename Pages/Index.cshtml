@@ -26,8 +26,9 @@
 						<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
 					</ul>
 				@{
+					
 					var isAuthenticated = false;
-					var user = IndexModel.user;
+					var user = UserSessions.GetUser(HttpContext.Session);
 					if (user!= null)
 						if (user.FirstName!= null)
 							isAuthenticated = true;
@@ -35,7 +36,7 @@
 				}
 
 				<ul class="header-links pull-right">
-    <li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+    
     @if (isAuthenticated)
     {
         <li class="dropdown">
@@ -46,7 +47,22 @@
                 <li><a href="/Profile"><i class="fa fa-user"></i> Профиль</a></li>
                 <li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> Мои продукты</a></li>
 				<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
-
+								@{
+									var role = HttpContext.Session.GetInt32("RoleId");
+								}
+								@switch (role)
+								{
+									case 2:
+										<li><a href="/Moderator"><i class="fa fa-sign-out"></i> Moder Page</a></li>
+										break;
+									case 3:
+										<li><a href="/Admin"><i class="fa fa-sign-out"></i> Admin Page</a></li>
+										break;
+									case 4:
+										<li><a href="/Director"><i class="fa fa-sign-out"></i> Director Page</a></li>
+										break;
+								}
+								
             </ul>
         </li>
     }
@@ -105,7 +121,7 @@
 								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Cart</span>
-									<div class="qty">2</div>
+									
 								</a>
 								</div>
 								<!-- /cart -->
@@ -113,12 +129,7 @@
 								
 
 								<!-- Menu Toogle -->
-								<div class="menu-toggle">
-									<a href="#">
-										<i class="fa fa-bars"></i>
-										<span>Menu</span>
-									</a>
-								</div>
+								
 								<!-- /Menu Toogle -->
 							</div>
 						</div>
@@ -157,45 +168,64 @@
 				<!-- row -->
 				<div class="row">
 					<!-- shop -->
-					<div class="col-md-4 col-xs-6">
-						<div class="shop">
-							<div class="shop-img">
-								<img src="./img/shop01.png" alt="">
-							</div>
-							<div class="shop-body">
-								<h3>Laptop<br>Collection</h3>
-								<a href="#" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
-							</div>
+				<div class="col-md-4 col-xs-6">
+					<div class="shop">
+						<div class="shop-img">
+							<img id="laptopImage" src="./img/shop01.png" alt="">
+							@{
+								int laptopId = 6; // Укажите нужное значение категории
+							}
+
+						</div>
+						<div class="shop-body">
+							<h3>Laptops<br>Collection</h3>
+							<a asp-page="/ProductSearch" asp-route-Category="@laptopId">
+								<img id="laptopImage" src="./img/shop01.png" alt="">
+							</a>
 						</div>
 					</div>
+				</div>
+				<!-- /shop -->
 					<!-- /shop -->
 
 					<!-- shop -->
 					<div class="col-md-4 col-xs-6">
 						<div class="shop">
 							<div class="shop-img">
-								<img src="./img/shop03.png" alt="">
+							<img id="accessImage" src="./img/shop03.png" alt="">
+							@{
+								int accessId = 7; // Укажите нужное значение категории
+							}
+
 							</div>
 							<div class="shop-body">
 								<h3>Accessories<br>Collection</h3>
-								<a href="#" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
+							<a asp-page="/ProductSearch" asp-route-Category="@accessId">
+								<img id="laptopImage" src="./img/shop03.png" alt="">
+							</a>
 							</div>
 						</div>
 					</div>
 					<!-- /shop -->
 
 					<!-- shop -->
-					<div class="col-md-4 col-xs-6">
-						<div class="shop">
-							<div class="shop-img">
-								<img  src="./img/shop02.png" alt="">
-							</div>
-							<div class="shop-body">
-								<h3>Cameras<br>Collection</h3>
-								<a href="#" class="cta-btn">Shop now <i class="fa fa-arrow-circle-right"></i></a>
-							</div>
+				<div class="col-md-4 col-xs-6">
+					<div class="shop">
+						<div class="shop-img">
+							<img id="cameraImage" src="./img/shop02.png" alt="">
+							@{
+								int cameraId = 8; // Укажите нужное значение категории
+							}
+
+						</div>
+						<div class="shop-body">
+							<h3>Cameras<br>Collection</h3>
+							<a asp-page="/ProductSearch" asp-route-Category="@cameraId">
+								<img id="laptopImage" src="./img/shop02.png" alt="">
+							</a>
 						</div>
 					</div>
+				</div>
 					<!-- /shop -->
 				</div>
 				<!-- /row -->
@@ -220,14 +250,13 @@
 									<div class="product">
 										<a href="/ProductInfo/@product.ProductId" class="product-link">
 											<div class="product-img">
-												<img src="@product.ImageUrl" alt="@product.Name">
+												<img src="@product.ImageUrl" alt="@product.Name" height="200" width="200">
 												<div class="product-label">
-													<span class="sale">-30%</span>
 													<span class="new">NEW</span>
 												</div>
 											</div>
 											<div class="product-body">
-												<p class="product-category">@product.Category</p>
+												<p class="product-category">@product.Categories.First().Name</p>
 												<h3 class="product-name">@product.Name</h3>
 												<h4 class="product-price">$@product.Price</h4>
 											</div>
@@ -258,22 +287,25 @@
 					<div class="col-md-12">
 						<div class="newsletter">
 							<p>Sign Up for the <strong>NEWSLETTER</strong></p>
-							<form>
-								<input class="input" type="email" placeholder="Enter Your Email">
-								<button class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
-							</form>
+						<form method="post" asp-page-handler="Subscribe">
+							<div class="form-group">
+								<label for="email">Email:</label>
+								<input class="input" type="email" id="email" name="email" placeholder="Enter Your Email" required>
+							</div>
+							<button type="submit" class="newsletter-btn"><i class="fa fa-envelope"></i> Subscribe</button>
+						</form>
 							<ul class="newsletter-follow">
 								<li>
-									<a href="#"><i class="fa fa-facebook"></i></a>
+								<a href="#"><i class="fa fa-facebook"></i></a>
 								</li>
 								<li>
-									<a href="#"><i class="fa fa-twitter"></i></a>
+								<a href="#"><i class="fa fa-twitter"></i></a>
 								</li>
 								<li>
-									<a href="#"><i class="fa fa-instagram"></i></a>
+								<a href="#"><i class="fa fa-instagram"></i></a>
 								</li>
 								<li>
-									<a href="#"><i class="fa fa-pinterest"></i></a>
+								<a href="#"><i class="fa fa-pinterest"></i></a>
 								</li>
 							</ul>
 						</div>
@@ -298,9 +330,9 @@
 								<h3 class="footer-title">About Us</h3>
 								<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
 								<ul class="footer-links">
-									<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-									<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-									<li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
+								<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
+								<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
+								<li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
 								</ul>
 							</div>
 						</div>
@@ -310,11 +342,11 @@
 							<div class="footer">
 								<h3 class="footer-title">Information</h3>
 								<ul class="footer-links">
-									<li><a href="#">About Us</a></li>
-									<li><a href="#">Contact Us</a></li>
-									<li><a href="#">Privacy Policy</a></li>
-									<li><a href="#">Orders and Returns</a></li>
-									<li><a href="#">Terms & Conditions</a></li>
+								<li><a href="#">About Us</a></li>
+								<li><a href="#">Contact Us</a></li>
+								<li><a href="#">Privacy Policy</a></li>
+								<li><a href="#">Orders and Returns</a></li>
+								<li><a href="#">Terms & Conditions</a></li>
 								</ul>
 							</div>
 						</div>
@@ -323,11 +355,7 @@
 							<div class="footer">
 								<h3 class="footer-title">Service</h3>
 								<ul class="footer-links">
-									<li><a href="#">My Account</a></li>
-									<li><a href="#">View Cart</a></li>
-									<li><a href="#">Wishlist</a></li>
-									<li><a href="#">Track My Order</a></li>
-									<li><a href="#">Help</a></li>
+								<li><a href="#">Help</a></li>
 								</ul>
 							</div>
 						</div>
@@ -342,12 +370,12 @@
 					<div class="row">
 						<div class="col-md-12 text-center">
 							<ul class="footer-payments">
-								<li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
-								<li><a href="#"><i class="fa fa-credit-card"></i></a></li>
-								<li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
-								<li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
-								<li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
-								<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
+							<li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
+							<li><a href="#"><i class="fa fa-credit-card"></i></a></li>
+							<li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
+							<li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
+							<li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
+							<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
 							</ul>
 							<span class="copyright">
 								<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->

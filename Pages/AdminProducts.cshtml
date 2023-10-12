@@ -1,8 +1,7 @@
 ﻿@page
-@model LoginModel
-@{
-}
+@model AdminProductsModel;
 <head>
+	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/slick.css" />
@@ -11,6 +10,7 @@
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/site.css" />
+
 </head>
 <body>
 	<!-- HEADER -->
@@ -24,8 +24,8 @@
 					<li><a href="#"><i class="fa fa-map-marker"></i> 1734 Stonecoal Road</a></li>
 				</ul>
 				@{
-					var isAuthenticated = false;
 					var user = UserSessions.GetUser(HttpContext.Session);
+					var isAuthenticated = false;
 					if (user != null)
 						if (user.FirstName != null)
 							isAuthenticated = true;
@@ -33,7 +33,7 @@
 				}
 
 				<ul class="header-links pull-right">
-					
+
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -43,7 +43,7 @@
 							<ul class="dropdown-menu" style="background: black;">
 								<!-- Добавляем стиль color: black; -->
 								<li><a href="/Profile"><i class="fa fa-user"></i> Профиль</a></li>
-								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> MyProducts</a></li>
+								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> Мои продукты</a></li>
 								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
 								@{
 									var role = HttpContext.Session.GetInt32("RoleId");
@@ -115,12 +115,11 @@
 								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Cart</span>
-									
+
 								</a>
 							</div>
 							<!-- /cart -->
 							<!-- Menu Toogle -->
-							
 							<!-- /Menu Toogle -->
 						</div>
 					</div>
@@ -132,98 +131,65 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
-	</body>
-	<!-- /HEADER -->
-<div class="container">
-	<h1>Авторизация</h1>
-<form method="post">
-    <div class="form-group">
-        <label for="Email">Email:</label>
-        <input type="email" id="Email" name="Email" class="form-control" />
-        <span asp-validation-for="Email"></span>
-    </div>
-	
-    <div class="form-group">
-        <label for="Password">Password:</label>
-        <input type="password" id="Password" name="Password" class="form-control" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Авторизация</button>
+	<div class="container">
+	<h2>Delete Item by ID</h2>
+	<a href="/Admin">To Admin Panel</a>
+	<form method="post">
 		<div class="form-group">
-			<a href="/Register" class="btn-register">Регистрация</a>
+			<label for="itemId">Item ID:</label>
+			<input type="text" class="form-control" id="itemId" name="itemId" required>
 		</div>
-</form>
-</div>
+		<button type="submit" class="btn btn-danger">Delete</button>
+	</form>
 
-<footer id="footer">
-	<!-- top footer -->
-	<div class="section">
-		<!-- container -->
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">About Us</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-						<ul class="footer-links">
-							<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-							<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-							<li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="clearfix visible-xs"></div>
+	@if (Model.DeleteResult != null)
+	{
+		<div class="alert alert-success">@Model.DeleteResult</div>
+	}
 
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Information</h3>
-						<ul class="footer-links">
-							<li><a href="#">About Us</a></li>
-							<li><a href="#">Contact Us</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-							<li><a href="#">Orders and Returns</a></li>
-							<li><a href="#">Terms & Conditions</a></li>
-						</ul>
-					</div>
-				</div>
+	<div class="col-md-12">
 
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Service</h3>
-						<ul class="footer-links">
-							<li><a href="#">Help</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
+		<table class="table">
+			<thead>
+				<tr>
+					<th>ID</th>
+					<th>Name</th>
+					<th>Description</th>
+					<th>Price</th>
+					<th>StockQuantity</th>
+					<th>CreatedAt</th>
+					<th>Delete</th>
+					<!-- Добавьте другие заголовки столбцов здесь -->
+				</tr>
+			</thead>
+			<tbody>
+				@foreach (var item in Model.Products)
+				{
+					<tr>
+						<td><a href="/ProductInfo/@item.ProductId">@item.ProductId</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Name</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Description</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.Price</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.StockQuantity</a></td>
+						<td><a href="/ProductInfo/@item.ProductId">@item.CreatedAt</a></td>
+						<td>
+							<form method="post">
+								<input type="hidden" name="itemId" value="@item.ProductId" /> <!-- Здесь передаем ReviewId -->
+								<button type="submit" class="btn btn-danger">Delete</button>
+							</form>
+						</td>
+					</tr>
+				}
+			</tbody>
+		</table>
+
+		
 	</div>
-	<div id="bottom-footer" class="section">
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-12 text-center">
-					<ul class="footer-payments">
-						<li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
-						<li><a href="#"><i class="fa fa-credit-card"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
-					</ul>
-					<span class="copyright">
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-					</span>
-				</div>
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
 	</div>
-	<!-- /bottom footer -->
-</footer>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/slick.min.js"></script>
+	<script src="js/nouislider.min.js"></script>
+	<script src="js/jquery.zoom.min.js"></script>
+	<script src="js/main.js"></script>
+</body>

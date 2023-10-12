@@ -3,13 +3,19 @@ using System.Collections.Generic;
 
 namespace Marketplace_Web.Models;
 
-public partial class Wishlist
+public partial class Order
 {
-    public int WishlistId { get; set; }
+    public int OrderId { get; set; }
 
     public int? UserId { get; set; }
 
     public int? ProductId { get; set; }
+
+    public DateTime? CreateTime { get; set; }
+
+    public int? TotalQuantity { get; set; }
+
+    public decimal? TotalAmount { get; set; }
 
     public virtual Product? Product { get; set; }
 

@@ -55,6 +55,11 @@ Table OF Contents
 	Typography
 \*----------------------------*/
 
+.product-disabled {
+    opacity: 0.5; /* Задает полупрозрачность */
+    pointer-events: none; /* Делает элемент некликабельным */
+}
+
 body {
   font-family: 'Montserrat', sans-serif;
   font-weight: 400;
@@ -193,6 +198,7 @@ select {
   background: #FFF;
   border: 1px solid #E4E7ED;
   height: 40px;
+  width: 150px;
 }
 
 /*-- checkbox & radio input --*/
@@ -487,7 +493,7 @@ select {
 
 .header-search form .search-btn {
   height: 40px;
-  width: 100px;
+  width: 70px;
   background: #D10024;
   color: #FFF;
   font-weight: 700;

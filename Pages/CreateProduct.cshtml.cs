@@ -9,12 +9,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace Marketplace_Web {
 	public class CreateProductModel : PageModel
 	{
-		private readonly IHttpClientFactory _clientFactory;
-
-		public CreateProductModel(IHttpClientFactory clientFactory)
-		{
-			_clientFactory = clientFactory;
-		}
+		[BindProperty]
+		public string CategoryId { get; set; }
+		Marketplace1Context _context = new Marketplace1Context();
 
 		[BindProperty]
 		public Product Product { get; set; }
@@ -26,54 +23,49 @@ namespace Marketplace_Web {
 
 		public async Task<IActionResult> OnPostAsync()
 		{
+			var category = await _context.Categories.FindAsync(Convert.ToInt32(CategoryId));
 			if (!ModelState.IsValid)
 			{
 				return Page();
 			}
-
+			if (Product.Price < 0)
+				Product.Price*=-1;
+			if (Product.StockQuantity < 0)
+				Product.StockQuantity *= -1;
 			// Получите SellerUserId из сессии
-			var sellerUserId = HttpContext.Session.GetInt32("UserId");
+			var userId = HttpContext.Session.GetInt32("UserId");
+			var user = await _context.Users.FindAsync(userId);
 
-			if (!sellerUserId.HasValue)
+			if (user == null || userId == 0)
 			{
 				// Пользователь не авторизован, выполните действия по вашему усмотрению
 				return RedirectToPage("/Login"); // Например, перенаправьте на страницу входа
 			}
 
-			// Создайте объект для отправки на API
-			var productData = new
+			// Создайте экземпляр класса Product и заполните его данными из формы
+			var product = new Product
 			{
 				Name = Product.Name,
 				Description = Product.Description,
-				CategoryId = Product.CategoryId,
 				Price = Product.Price,
-				ImageURL = Product.ImageUrl,
 				StockQuantity = Product.StockQuantity,
-				SellerUserId = sellerUserId.Value
+				CreatedAt = DateTime.UtcNow,
+				UpdatedAt = null, // Вы можете установить значение по умолчанию
+				ImageUrl = Product.ImageUrl,
+				Categories = new List<Category>() { category }
 			};
+			// Добавьте продукт в коллекцию продуктов пользователя
+			user.Products.Add(product);
 
-			// Сериализуйте данные в JSON
-			var jsonData = JsonSerializer.Serialize(productData);
+			// Добавьте продукт в контекст базы данных
+			_context.Products.Add(product);
+			
 
-			// Отправьте данные на API
-			using (var httpClient = _clientFactory.CreateClient())
-			{
-				var apiUrl = "http://localhost:8080/api/product/create";
-				var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-				var response = await httpClient.PostAsync(apiUrl, content);
+			// Сохраните изменения в базе данных
+			await _context.SaveChangesAsync();
 
-				if (response.IsSuccessStatusCode)
-				{
-					// Товар успешно создан, выполните необходимые действия, например, перенаправьтесь на страницу с подтверждением
-					return RedirectToPage("/ProductCreated");
-				}
-				else
-				{
-					// Обработайте ошибку, например, показав сообщение об ошибке пользователю
-					ModelState.AddModelError(string.Empty, "Произошла ошибка при создании товара.");
-					return Page();
-				}
-			}
+			return RedirectToPage("MyProducts");
 		}
+
 	}
 }

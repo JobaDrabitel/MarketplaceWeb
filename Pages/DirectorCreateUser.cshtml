@@ -1,8 +1,10 @@
 ﻿@page
-@model LoginModel
+@model DirectorCreateUser
 @{
+	ViewData["Title"] = "Register";
 }
 <head>
+	<!-- Google font -->
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/slick.css" />
@@ -11,6 +13,7 @@
 	<link rel="stylesheet" href="css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/style.css" />
 	<link rel="stylesheet" href="css/site.css" />
+
 </head>
 <body>
 	<!-- HEADER -->
@@ -33,7 +36,7 @@
 				}
 
 				<ul class="header-links pull-right">
-					
+
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -68,9 +71,6 @@
 						<li><a href="/Login"><i class="fa fa-user-o"></i> Login</a></li>
 					}
 				</ul>
-
-
-
 			</div>
 		</div>
 		<!-- /TOP HEADER -->
@@ -115,13 +115,9 @@
 								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Cart</span>
-									
+
 								</a>
 							</div>
-							<!-- /cart -->
-							<!-- Menu Toogle -->
-							
-							<!-- /Menu Toogle -->
 						</div>
 					</div>
 					<!-- /ACCOUNT -->
@@ -132,98 +128,89 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
-	</body>
-	<!-- /HEADER -->
-<div class="container">
-	<h1>Авторизация</h1>
-<form method="post">
-    <div class="form-group">
-        <label for="Email">Email:</label>
-        <input type="email" id="Email" name="Email" class="form-control" />
-        <span asp-validation-for="Email"></span>
-    </div>
-	
-    <div class="form-group">
-        <label for="Password">Password:</label>
-        <input type="password" id="Password" name="Password" class="form-control" />
-        <span asp-validation-for="Password"></span>
-    </div>
-    <button type="submit" class="btn btn-primary">Авторизация</button>
-		<div class="form-group">
-			<a href="/Register" class="btn-register">Регистрация</a>
-		</div>
-</form>
+
+<!-- /HEADER -->
+	<div class="container">
+		<a href="/Admin">To Admin Panel</a>
+		<form method="post">
+			<div class="form-group">
+				<label for="FirstName">First Name:</label>
+				<input type="text" id="FirstName" name="FirstName" class="form-control" />
+				<span asp-validation-for="FirstName"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="LastName">Last Name:</label>
+				<input type="text" id="LastName" name="LastName" class="form-control" />
+				<span asp-validation-for="LastName"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="Phone">Phone:</label>
+				<input type="number" id="Phone" name="Phone" class="form-control" />
+				<span asp-validation-for="Phone"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="Email">Email:</label>
+				<input type="email" id="Email" name="Email" class="form-control" />
+				<span asp-validation-for="Email"></span>
+			</div>
+
+			@if (!ViewData.ModelState.IsValid)
+			{
+				<div class="alert alert-danger">
+					<ul>
+						@foreach (var key in ViewData.ModelState.Keys)
+						{
+							foreach (var error in ViewData.ModelState[key].Errors)
+							{
+								<li>@error.ErrorMessage</li>
+							}
+						}
+					</ul>
+				</div>
+			}
+
+			<div class="form-group">
+				<label for="Password">Password:</label>
+				<input type="password" id="Password" name="Password" class="form-control" />
+				<span asp-validation-for="Password"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="ConfirmPassword">Confirm Password:</label>
+				<input type="password" id="ConfirmPassword" name="ConfirmPassword" class="form-control" />
+				<span asp-validation-for="ConfirmPassword"></span>
+			</div>
+
+			<div class="form-group">
+				<label for="selectedRole">Select Role:</label>
+				<select name="selectedRole" id="selectedRole" class="form-control">
+					@foreach (var role in Model.Roles)
+					{
+						<option value="@role.RoleName">@role.RoleName</option>
+					}
+				</select>
+			</div>
+
+			<div class="form-group">
+				<label for="ImageUrl">ImageUrl:</label>
+				<input type="url" id="ImageUrl" name="ImageUrl" class="form-control" />
+				<span asp-validation-for="ImageUrl"></span>
+			</div>
+			@if (Model.CreateResult != null)
+			{
+				<div class="alert alert-success">@Model.CreateResult</div>
+			}
+			<button type="submit" class="btn btn-primary">Create User</button>
+		</form>
 </div>
 
-<footer id="footer">
-	<!-- top footer -->
-	<div class="section">
-		<!-- container -->
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">About Us</h3>
-						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut.</p>
-						<ul class="footer-links">
-							<li><a href="#"><i class="fa fa-map-marker"></i>1734 Stonecoal Road</a></li>
-							<li><a href="#"><i class="fa fa-phone"></i>+021-95-51-84</a></li>
-							<li><a href="#"><i class="fa fa-envelope-o"></i>email@email.com</a></li>
-						</ul>
-					</div>
-				</div>
-				<div class="clearfix visible-xs"></div>
-
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Information</h3>
-						<ul class="footer-links">
-							<li><a href="#">About Us</a></li>
-							<li><a href="#">Contact Us</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-							<li><a href="#">Orders and Returns</a></li>
-							<li><a href="#">Terms & Conditions</a></li>
-						</ul>
-					</div>
-				</div>
-
-				<div class="col-md-3 col-xs-6">
-					<div class="footer">
-						<h3 class="footer-title">Service</h3>
-						<ul class="footer-links">
-							<li><a href="#">Help</a></li>
-						</ul>
-					</div>
-				</div>
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
-	</div>
-	<div id="bottom-footer" class="section">
-		<div class="container">
-			<!-- row -->
-			<div class="row">
-				<div class="col-md-12 text-center">
-					<ul class="footer-payments">
-						<li><a href="#"><i class="fa fa-cc-visa"></i></a></li>
-						<li><a href="#"><i class="fa fa-credit-card"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-paypal"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-mastercard"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-discover"></i></a></li>
-						<li><a href="#"><i class="fa fa-cc-amex"></i></a></li>
-					</ul>
-					<span class="copyright">
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-						Copyright &copy;<script>document.write(new Date().getFullYear());</script> All rights reserved | This template is made with <i class="fa fa-heart-o" aria-hidden="true"></i> by <a href="https://colorlib.com" target="_blank">Colorlib</a>
-						<!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-					</span>
-				</div>
-			</div>
-			<!-- /row -->
-		</div>
-		<!-- /container -->
-	</div>
-	<!-- /bottom footer -->
-</footer>
+</body>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>

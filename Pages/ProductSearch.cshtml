@@ -25,7 +25,7 @@
 				</ul>
 				@{
 					var isAuthenticated = false;
-					var user = IndexModel.user;
+					var user = UserSessions.GetUser(HttpContext.Session);
 					if (user!= null)
 						if (user.FirstName != null)
 							isAuthenticated = true;
@@ -33,7 +33,7 @@
 				}
 
 				<ul class="header-links pull-right">
-					<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+					
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -42,10 +42,24 @@
 							</a>
 							<ul class="dropdown-menu" style="background: black;">
 								<!-- Добавляем стиль color: black; -->
-								<li><a href="/Profile/{@user.UserId}"><i class="fa fa-user"></i> Профиль</a></li>
+								<li><a href="/Profile"><i class="fa fa-user"></i> Профиль</a></li>
 								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> Мои продукты</a></li>
 								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
-
+								@{
+									var role = HttpContext.Session.GetInt32("RoleId");
+								}
+								@switch (role)
+								{
+									case 2:
+										<li><a href="/Moderator"><i class="fa fa-sign-out"></i> Moder Page</a></li>
+										break;
+									case 3:
+										<li><a href="/Admin"><i class="fa fa-sign-out"></i> Admin Page</a></li>
+										break;
+									case 4:
+										<li><a href="/Director"><i class="fa fa-sign-out"></i> Director Page</a></li>
+										break;
+								}
 							</ul>
 						</li>
 					}
@@ -108,17 +122,12 @@
 								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Cart</span>
-									<div class="qty">2</div>
+									
 								</a>
 							</div>
 							<!-- /cart -->
 							<!-- Menu Toogle -->
-							<div class="menu-toggle">
-								<a href="#">
-									<i class="fa fa-bars"></i>
-									<span>Menu</span>
-								</a>
-							</div>
+							
 							<!-- /Menu Toogle -->
 						</div>
 					</div>
@@ -131,13 +140,16 @@
 		<!-- /MAIN HEADER -->
 	</header>
 	<!-- /HEADER -->
-	</body>
-<div class="col-md-12">
-	<div class="row">
-		<div class="products-tabs">
+
+<div class="section">
+		<!-- container -->
+	<div class="container">
+		<div class="col-md-12">
+		<div class="row">
+			<div class="products-tabs">
 			<!-- tab -->
-			<div id="tab1" class="tab-pane active">
-				<div class="products-slick" data-nav="#slick-nav-1">
+				<div id="tab1" class="tab-pane active">
+					<div class="products-slick" data-nav="#slick-nav-1">
 					@foreach (var product in Model.Products)
 					{
 						<div class="col-md-2">
@@ -145,26 +157,26 @@
 							<a href="/ProductInfo/@product.ProductId" class="product-link">
 								<div class="product">
 									<div class="product-img">
-										<img src="@product.ImageUrl" alt="@product.Name" width="100" height="200">
+										<img src="@product.ImageUrl" alt="@product.Name" height="200" width="200">
 										<div class="product-label">
 											<span class="new">NEW</span>
 										</div>
 									</div>
 									<div class="product-body">
-										<p class="product-category">@product.Category</p>
+													<p class="product-category">@product.Categories.First().Name</p>
 										<h3 class="product-name"><a href="#">@product.Name</a></h3>
 										<h4 class="product-price">$@product.Price</h4>
 
-										<div class="product-btns">
-											<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-											<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-										</div>
+										
 									</div>
 									<div class="add-to-cart">
-										<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+										<a href="/ProductInfo/@product.ProductId" class="product-link">
+											<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> Просмотреть продукт</button>
+										</a>
 									</div>
 								</div>
 							</a>
+							
 						</div>
 
 					}
@@ -178,6 +190,14 @@
 		</div>
 	</div>
 </div>
+</body>
+
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>
 
 
 

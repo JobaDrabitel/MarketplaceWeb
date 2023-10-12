@@ -1,5 +1,5 @@
 using Marketplace_Web;
-using Marketplace_Web.Models;
+using Marketplace_Web.Pages;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -8,73 +8,50 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using Marketplace_Web.Models;
+using Microsoft.EntityFrameworkCore;
 
 public class LoginModel : PageModel
 {
-    [BindProperty]
+	[BindProperty]
     [Required(ErrorMessage = "Email is required.")]
     [EmailAddress(ErrorMessage = "Invalid email format.")]
-    public string Email { get; set; }
+	[MaxLength(32, ErrorMessage = "Максимальная длина email может быть 32 символа")]
+	public string Email { get; set; }
 
     [BindProperty]
     [Required(ErrorMessage = "Password is required.")]
-    [DataType(DataType.Password)]
+	[MinLength(8, ErrorMessage = "Минимальная длина пароля должна быть 8 символов")]
+	[MaxLength(32, ErrorMessage = "Максимальная длина пароля может быть 32 символа")]
+	[DataType(DataType.Password)]
     public string Password { get; set; }
 
+    Marketplace1Context _context = new Marketplace1Context();
     public async Task<IActionResult> OnPostAsync()
     {
         if (!ModelState.IsValid)
         {
-            return Page();
-        }
+			return Page();
+		}
 
-        // Создайте объект для отправки на сервер
-        var loginData = new
+		var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == Email && u.PasswordHash == Password);
+        if (user != null)
         {
-            Email = Email,
-            PasswordHash = Password
-        };
-
-        // Сериализуйте объект в JSON
-        var jsonData = JsonSerializer.Serialize(loginData);
-
-        // Отправьте POST-запрос на API
-        using (var httpClient = new HttpClient())
-        {
-            // Замените URL на ваше API-URL
-            var apiUrl = "http://localhost:8080/api/user/getbyfields";
-
-            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-            var response = await httpClient.PostAsync(apiUrl, content);
-
-            if (response.IsSuccessStatusCode && response.Content!=null)
-            {
-                var jsonResponse = await response.Content.ReadAsStringAsync();
-                jsonResponse = JsonFormatter.JSONFormatting(jsonResponse);
-                User? user;
-
-				try
-                {
-                    user = JsonSerializer.Deserialize<User>(jsonResponse);
-                }
-                catch { user = null; }
-				if (user != null)
-				{
-					HttpContext.Session.SetInt32("UserId", user.UserId);
-					HttpContext.Session.SetString("FirstName", user.FirstName);
-					HttpContext.Session.SetString("LastName", user.LastName);
-					HttpContext.Session.SetString("Email", user.Email);
-					if (user.ImageUrl != null)
-						HttpContext.Session.SetString("ImageUrl", user.ImageUrl);
-				}
-				return RedirectToPage("/Index");
-            }
-            else
-            {
-                // Ошибка аутентификации
-                ModelState.AddModelError(string.Empty, "Invalid email or password.");
-                return Page();
-            }
+            UserSessions.SetUser(HttpContext.Session, user);
+            if (user.Roles.First().RoleId == 1)
+                return RedirectToPage("/Index");
+            else if (user != null && user.Roles.First().RoleId == 2)
+                return RedirectToPage("/Moderator");
+            else if (user != null && user.Roles.First().RoleId == 3)
+                return RedirectToPage("/Admin");
+            else if (user != null && user.Roles.First().RoleId == 4)
+                return RedirectToPage("/Director");
         }
+        else
+        {
+            // Ошибка аутентификации
+            ModelState.AddModelError(string.Empty, "Invalid email or password.");
+        }
+        return Page();
     }
 }

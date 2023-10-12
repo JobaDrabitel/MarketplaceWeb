@@ -1,190 +1,100 @@
 using Marketplace_Web.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System.Text;
 using System.Text.Json;
 
 namespace Marketplace_Web.Pages
 {
-    public class ProductInfoModel : PageModel
-    {
-        private readonly IHttpClientFactory _clientFactory;
-        public User user;
-        public ProductInfoModel(IHttpClientFactory clientFactory)
-        {
-            _clientFactory = clientFactory;
-        }
+	public class ProductInfoModel : PageModel
+	{
+		public User user;
+		Marketplace1Context _context = new Marketplace1Context();
+		public Product Product { get; set; }
+		public List<Review> Reviews { get; set; } = new List<Review>();
+		public string Category { get; set; }
+		public User Seller { get; set; }
+		public List<User> Users { get; set; } = new List<User>();
+		public List<Product> Advices { get; set; }
+		public bool IsAdded { get; set; } = false;
 
-        public Product Product { get; set; }
-        public List<Review> Reviews { get; set; }
-        public string Category { get; set; }
-        public User Seller { get; set; }
-        public List<User> Users { get; set; }
-        public List<Product> Advices { get; set; }
-        public bool IsAdded { get; set; } = false;
-
-        public async Task<IActionResult> OnGetAsync(int productId)
-        {
-            user = UserSessions.GetUser(HttpContext.Session);
-            Users = new List<User>();
+		public async Task<IActionResult> OnGetAsync(int productId)
+		{
+			var userId = HttpContext.Session.GetInt32("UserId");
+			var user = await _context.Users.FindAsync(userId);
 			// Здесь мы отправляем GET-запрос на API, чтобы получить информацию о продукте
-			var apiUrl = $"http://localhost:8080/api/product/getbyid/{productId}"; // Замените на свой URL
-            using (HttpClient client = new HttpClient())
-            {
-                var response = await client.GetAsync(apiUrl);
+			Product = await _context.Products.FindAsync(productId);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var productJson = await response.Content.ReadAsStringAsync();
-                    Product = JsonSerializer.Deserialize<Product>(productJson);
-                }
-                else
-                {
-                    return NotFound(); // Если продукт не найден
-                }
+			if (Product == null)
+			{
+				return NotFound(); // Если продукт не найден
+			}
+			try
+			{
+				Category = Product.Categories.FirstOrDefault<Category>().Name;
+				Seller = Product.Users.First();
+			}
+			catch (Exception ex) { Category = "Нет"; Seller = null; }
+			Reviews = Product.Reviews.ToList();
 
-                var categoryRespose = await client.GetAsync($"http://localhost:8080/api/category/getbyid/{Product.CategoryId}");
-                var categoryJson = await categoryRespose.Content.ReadAsStringAsync();
-                try
-                {
-                    Category = JsonSerializer.Deserialize<Category>(categoryJson).Name;
-                    var sellerResponse = await client.GetAsync($"http://localhost:8080/api/user/getbyid/{Product.SellerUserId}");
-                    var sellerJson = await sellerResponse.Content.ReadAsStringAsync();
-                    Seller = JsonSerializer.Deserialize<User>(sellerJson);
-                }
-                catch (Exception ex) { Category = "Нет"; Seller = null; }
-                // Теперь отправляем POST-запрос для получения отзывов
-                var reviewRequest = new { ProductId = productId };
-                var reviewRequestJson = JsonSerializer.Serialize(reviewRequest);
-
-                var reviewResponse = await client.PostAsync($"http://localhost:8080/api/review/getbyfields", new StringContent(reviewRequestJson, System.Text.Encoding.Default, "application/json")); // Замените на свой URL
-                if (reviewResponse.IsSuccessStatusCode)
-                {
-                    var reviewJson = await reviewResponse.Content.ReadAsStringAsync();
-                    Reviews = JsonSerializer.Deserialize<List<Review>>(reviewJson);
-                }
-                else
-                {
-                    Reviews = new List<Review>();
-                }
-                foreach (var review in Reviews)
-                {
-                    if (review.UserId == null)
-                        review.UserId = 2;
-                    var userResponse = await client.GetAsync($"http://localhost:8080/api/user/getbyid/{review.UserId}");
-                    var userJson = await userResponse.Content.ReadAsStringAsync();
-                    Users.Add(JsonSerializer.Deserialize<User>(userJson));
-                }
-                await GetAdvices(Product.CategoryId);
-                return this.Page();
-            }
-
-        }
-        public async Task<IActionResult> OnPostAsync(int productId, int rating, string comment, string? image)
-        {
-            if (!ModelState.IsValid)
-            {
-                return RedirectToPage("/ProductInfo", new { productId });
-            }
+			foreach (var review in Reviews)
+				Users.Add(review.User);
+			await GetAdvices(Product.Categories.First().CategoryId);
+			return Page();
 
 
-            using (var httpClient = new HttpClient())
-            {
-                var reviewData = new
-                {
-                    UserId = HttpContext.Session.GetInt32("UserId"),
-                    ProductId = productId,
-                    Rating = rating,
-                    Comment = comment,
-                    CreatedAt = DateTime.UtcNow,
-                    ImageUrl = image
-                };
-                var jsonData = JsonSerializer.Serialize(reviewData);
-                // Замените URL на ваше API-URL
-                var apiUrl = "http://localhost:8080/api/review/create";
+		}
+		public async Task<IActionResult> OnPostAsync(int productId, int rating, string comment, string? image)
+		{
+			if (!ModelState.IsValid)
+			{
+				return RedirectToPage("/ProductInfo", new { productId });
+			}
 
-                var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-                var response = await httpClient.PutAsync(apiUrl, content);
 
-                if (response.IsSuccessStatusCode)
-                {
-                    return RedirectToPage("/ProductInfo", new { productId });
-                }
-                else
-                {
-                    // Обработка ошибки
-                    ModelState.AddModelError(string.Empty, "Failed to create review.");
-                    return RedirectToPage("/ProductInfo", new { productId });
-                }
-            }
-        }
-        private async Task GetAdvices(int? categoryId)
-        {
-            var requestData = new
-            {
-                CategoryId = categoryId
-            };
 
-            var jsonRequestData = JsonSerializer.Serialize(requestData);
-            var content = new StringContent(jsonRequestData, Encoding.UTF8, "application/json");
+			Review review = new Review()
+			{
+				UserId = HttpContext.Session.GetInt32("UserId"),
+				ProductId = productId,
+				Rating = rating,
+				Comment = comment,
+				CreatedAt = DateTime.UtcNow,
+				ImageUrl = image
+			};
+			try
+			{
+				_context.Reviews.Add(review);
+				await _context.SaveChangesAsync();
+			}
 
-            // Замените URL на ваше API-URL
-            var apiUrl = "http://localhost:8080/api/product/getbyfields";
 
-            using (var httpClient = new HttpClient())
-            {
-                var response = await httpClient.PostAsync(apiUrl, content);
+			catch
+			{
+				// Обработка ошибки
+				ModelState.AddModelError(string.Empty, "Failed to create review.");
+			}
+				return RedirectToPage("/ProductInfo", new { productId });
 
-                if (response.IsSuccessStatusCode)
-                {
-                    var jsonResponse = await response.Content.ReadAsStringAsync();
-                    var products = JsonSerializer.Deserialize<List<Product>>(jsonResponse);
-                    Advices = products;
-                }
-                else
-                {
-                    throw new Exception();
-                }
-            }
-
-        }
+		}
+		private async Task GetAdvices(int? categoryId) =>
+			Advices = await _context.Products
+			.Where(p => p.Categories.Any(c => c.CategoryId == categoryId))
+			.Take(5)
+			.ToListAsync();
 		public async Task<IActionResult> OnPostAddToCartAsync(int productId)
 		{
-          
+
 			var userId = HttpContext.Session.GetInt32("UserId");
-            if (userId != null)
-            {
-                var regData = new
-                {
-                    ProductId = productId,
-                    UserId = userId
-                };
-
-
-                var jsonData = JsonSerializer.Serialize(regData);
-
-                using (var httpClient = new HttpClient())
-                {
-                    // Замените URL на ваше API-URL
-                    var apiUrl = "http://localhost:8080/api/wishlist/create";
-
-                    var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
-                    var response = await httpClient.PutAsync(apiUrl, content);
-
-                    if (response.IsSuccessStatusCode && response.Content != null)
-                    {
-                        IsAdded = true;
-                        return RedirectToPage("/Cart");
-                    }
-                    else
-                    {
-						IsAdded = false;
-						return Page();
-					}
-                    
-                }
-            }
-            else { return RedirectToPage("/Login"); }
+			var user = await _context.Users.FindAsync(userId);
+			if (user == null)
+				return RedirectToPage("/Login");
+			var product = await _context.Products.FindAsync(productId);
+			user.ProductsNavigation.Add(product);
+			product.UsersNavigation.Add(user);
+			await _context.SaveChangesAsync();
+			return RedirectToPage("/ProductInfo", new { productId });
 		}
 
 

@@ -1,5 +1,5 @@
-﻿@page "{productId:int}"
-@model Marketplace_Web.Pages.ProductInfoModel
+﻿@page "{userId:int}"
+@model Marketplace_Web.Pages.UserInfoModel
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -37,7 +37,7 @@
 				}
 
 				<ul class="header-links pull-right">
-					
+
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -119,13 +119,11 @@
 								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
 									<span>Cart</span>
-									
+
 								</a>
 							</div>
 							<!-- /cart -->
 							<!-- Menu Toogle -->
-							
-
 							<!-- /Menu Toogle -->
 						</div>
 					</div>
@@ -138,116 +136,36 @@
 		<!-- /MAIN HEADER -->
 	</header>
 	<!-- /HEADER -->
-	<div class="container">
-<h1>@Model.Product.Name</h1>
-<img src="@Model.Product.ImageUrl" height="300" width="300" />
-<p>Description: @Model.Product.Description</p>
-<p>Price: $@Model.Product.Price</p>
-<p>Stock Quantity: @Model.Product.StockQuantity</p>
-<p>Category: @Model.Category</p>
-<a href="/UserInfo/@Model.Product.Users.First().UserId">Seller User: @Model.Product.Users.First().FirstName</a>
-<p>Created At: @Model.Product.CreatedAt</p>
-<p>Updated At: @Model.Product.UpdatedAt</p>
-		<form method="post" asp-page-handler="AddToCart">
-			<input type="hidden" name="productId" value="@Model.Product.ProductId" />
-			<button type="submit" class="btn btn-primary">Добавить в корзину</button>
-		</form>
-		@if (Model.IsAdded)
-		{
-			<div class="alert alert-success" role="alert">
-				Profile updated successfully!
-			</div>
-		}
-<h2>Reviews</h2>
+	<div style="text-align: center;">
+	<img src="@Model.User.ImageUrl" alt="User Image" style="max-width: 200px; max-height: 200px; margin-bottom: 10px;" />
 
-<!-- Форма для добавления отзыва с возможностью прикрепления фото -->
-<h2>Add a Review</h2>
-<form method="post" enctype="multipart/form-data">
-		<div class="form-group">
-			<label for="rating">Rating:</label>
-			<input type="range" id="rating" name="rating" min="1" max="5" step="1" value="1" oninput="updateRating(this.value)">
-			<span id="selectedRating">1</span>
-		</div>
-
-		<script>
-			function updateRating(value) {
-				document.getElementById("selectedRating").textContent = value;
-			}
-		</script>
-			<div class="form-group">
-				<label for="comment">Comment:</label>
-				<textarea id="comment" name="comment" class="form-control" rows="4" required maxlength="256"></textarea>
-			</div>
-    <div class="form-group">
-        <label for="image">Attach Image:</label>
-        <input type="url" id="image" name="image" accept="image/*">
-    </div>
-		@{var userId = HttpContext.Session.GetInt32("UserId");
-		if (userId != null && userId != 0)
-		{
-			<button type="submit" class="btn btn-primary">Submit Review</button>
-		}
-		else
-		{
-			<button type="button" class="btn btn-primary" disabled>Submit Review</button>
-		}}
-</form>
-
-
-    @foreach (var review in Model.Reviews)
-    {
-        <div class="comment">
-            <div class="comment-user">
-                <img src="@Model.Users[Model.Reviews.IndexOf(review)].ImageUrl" alt="User Image" class="user-image" height="50" width="50">
-                <span class="user-name">@Model.Users[Model.Reviews.IndexOf(review)].FirstName @Model.Users[Model.Reviews.IndexOf(review)].LastName</span>
-                <span class="star-rating">@review.Rating ⭐</span>
-            </div>
-				<div class="comment-text" style="max-width: 300px;">
-					<p style="word-wrap:break-word;">@review.Comment</p>
-					<img src="@review.ImageUrl" alt="Image" class="user-image" style="max-width: 300px; max-height: 200px;">
-				</div>
-        </div>
-    }
-	<h2>Также посмотрите</h2>
+	<div>
+		<h2>@Model.User.FirstName @Model.User.LastName</h2>
+		<p>@Model.User.Email</p>
+		<p>@Model.User.Phone</p>
 	</div>
-	<div class="section">
-		<!-- container -->
-		<div class="container">
-
-			<div class="col-md-12">
-				<div class="row">
-					<div class="products-tabs">
-						<!-- tab -->
-						<div id="tab1" class="tab-pane active">
-							<div class="products-slick" data-nav="#slick-nav-1">
-								@foreach (var advice in Model.Advices)
-								{
-									<div class="product">
-										<a href="/ProductInfo/@advice.ProductId" class="product-link">
-											<div class="product-img">
-												<img src="@advice.ImageUrl" alt="@advice.Name">
-												<div class="product-label">
-													<span class="sale">-30%</span>
-													<span class="new">NEW</span>
-												</div>
-											</div>
-											<div class="product-body">
-												<p class="product-category">@advice.Categories.First().CategoryId</p>
-												<h3 class="product-name">@advice.Name</h3>
-												<h4 class="product-price">$@advice.Price</h4>
-											</div>
-										</a>
-									</div>
-								}
+	<div class="col-md-12 products-container">
+		@foreach (var product in Model.Products)
+		{
+			<div class="col-md-2">
+				<div class="product">
+					<!-- Оборачиваем весь товар в ссылку -->
+					<a href="/ProductInfo/@product.ProductId" class="product-link">
+						<div class="product-img">
+							<img src="@product.ImageUrl" alt="@product.Name" width="100" height="200">
+							<div class="product-label">
+								<span class="new">NEW</span>
 							</div>
-							<div id="slick-nav-1" class="products-slick-nav"></div>
 						</div>
-						<!-- /tab -->
-					</div>
+						<div class="product-body">
+							<p class="product-category">@product.Categories.First().CategoryId</p>
+							<h3 class="product-name"><a href="/ProductInfo/@product.ProductId">@product.Name</a></h3>
+							<h4 class="product-price">$@product.Price</h4>
+						</div>
+					</a>
 				</div>
 			</div>
-
-		</div>
+		}
 	</div>
 	<footer id="footer">
 		<!-- top footer -->

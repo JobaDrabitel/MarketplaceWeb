@@ -3,6 +3,8 @@
 @{
     ViewData["Title"] = "My Products";
 }
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<link href="https://fonts.googleapis.com/css?family=Montserrat:400,500,700" rel="stylesheet">
 	<link rel="stylesheet" href="css/bootstrap.min.css" />
@@ -28,7 +30,7 @@
 				</ul>
 				@{
 					var isAuthenticated = false;
-					var user = IndexModel.user;
+					var user = UserSessions.GetUser(HttpContext.Session);
 					if (user!= null)
 						if (user.FirstName != null)
 							isAuthenticated = true;
@@ -36,7 +38,7 @@
 				}
 
 				<ul class="header-links pull-right">
-					<li><a href="#"><i class="fa fa-dollar"></i> USD</a></li>
+					
 					@if (isAuthenticated)
 					{
 						<li class="dropdown">
@@ -45,9 +47,24 @@
 							</a>
 							<ul class="dropdown-menu" style="background: black;">
 								<!-- Добавляем стиль color: black; -->
-								<li><a href="/Profile/{@user.UserId}"><i class="fa fa-user"></i> Профиль</a></li>
+								<li><a href="/Profile"><i class="fa fa-user"></i> Профиль</a></li>
 								<li><a href="/MyProducts"><i class="fa fa-shopping-bag"></i> MyProducts</a></li>
 								<li><a href="/Index?handler=Logout&returnUrl=@HttpContext.Request.Path"><i class="fa fa-sign-out"></i> Выход</a></li>
+								@{
+									var role = HttpContext.Session.GetInt32("RoleId");
+								}
+								@switch (role)
+								{
+									case 2:
+										<li><a href="/Moderator"><i class="fa fa-sign-out"></i> Moder Page</a></li>
+										break;
+									case 3:
+										<li><a href="/Admin"><i class="fa fa-sign-out"></i> Admin Page</a></li>
+										break;
+									case 4:
+										<li><a href="/Director"><i class="fa fa-sign-out"></i> Director Page</a></li>
+										break;
+								}
 							</ul>
 						</li>
 					}
@@ -100,62 +117,15 @@
 						<div class="header-ctn">
 							<!-- Cart -->
 							<div>
-								<a href="/Wishlist?action=load">
-									<i class="fa fa-heart-o"></i>
-									<span>Your Wishlist</span>
-									<div class="qty">2</div>
-								</a>
-							</div>
-							<!-- /Wishlist -->
-							<!-- Cart -->
-							<div class="dropdown">
-								<a class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+								<a href="/Cart?action=load">
 									<i class="fa fa-shopping-cart"></i>
-									<span>Your Cart</span>
-									<div class="qty">3</div>
+									<span>Cart</span>
+									
 								</a>
-								<div class="cart-dropdown">
-									<div class="cart-list">
-										<div class="product-widget">
-											<div class="product-img">
-												<img src="./img/product01.png" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-name"><a href="#">product name goes here</a></h3>
-												<h4 class="product-price"><span class="qty">1x</span>$980.00</h4>
-											</div>
-											<button class="delete"><i class="fa fa-close"></i></button>
-										</div>
-
-										<div class="product-widget">
-											<div class="product-img">
-												<img src="./img/product02.png" alt="">
-											</div>
-											<div class="product-body">
-												<h3 class="product-name"><a href="#">product name goes here</a></h3>
-												<h4 class="product-price"><span class="qty">3x</span>$980.00</h4>
-											</div>
-											<button class="delete"><i class="fa fa-close"></i></button>
-										</div>
-									</div>
-									<div class="cart-summary">
-										<small>3 Item(s) selected</small>
-										<h5>SUBTOTAL: $2940.00</h5>
-									</div>
-									<div class="cart-btns">
-										<a href="#">View Cart</a>
-										<a href="#">Checkout  <i class="fa fa-arrow-circle-right"></i></a>
-									</div>
-								</div>
 							</div>
-							<!-- /Cart -->
+							<!-- /cart -->
 							<!-- Menu Toogle -->
-							<div class="menu-toggle">
-								<a href="#">
-									<i class="fa fa-bars"></i>
-									<span>Menu</span>
-								</a>
-							</div>
+							
 							<!-- /Menu Toogle -->
 						</div>
 					</div>
@@ -167,48 +137,60 @@
 		</div>
 		<!-- /MAIN HEADER -->
 	</header>
-</body>
+
 <!-- /HEADER -->
 <div class="col-md-12">
     <div class="section-title">
         <h3 class="title">My Products</h3>
         <div class="section-nav">
             <ul class="section-tab-nav tab-nav">
-                <!-- Здесь можно добавить ваши категории, если нужно -->
+				<a asp-page="/CreateProduct" class="btn btn-primary">Создать продукт</a>
             </ul>
         </div>
+		<div class="section-nav">
+			<ul class="section-tab-nav tab-nav">
+				<a asp-page="/MyOrders" class="btn btn-primary">Мои заказы</a>
+			</ul>
+		</div>
     </div>
 </div>
-
-<div class="col-md-12 products-container">
-    @foreach (var product in Model.Products)
-    {
-		<div class="col-md-2">
-			<!-- Оборачиваем весь товар в ссылку -->
-			<a href="/ProductInfo/@product.ProductId" class="product-link">
+	<div class="col-md-12 products-container">
+		@foreach (var product in Model.Products)
+		{
+			<div class="col-md-2">
 				<div class="product">
-					<div class="product-img">
-						<img src="@product.ImageUrl" alt="@product.Name" width="100" height="200">
-						<div class="product-label">
-							<span class="new">NEW</span>
+					<!-- Оборачиваем весь товар в ссылку -->
+					<a href="/ProductInfo/@product.ProductId" class="product-link">
+						<div class="product-img">
+							<img src="@product.ImageUrl" alt="@product.Name" width="100" height="200">
+							<div class="product-label">
+								<span class="new">NEW</span>
+							</div>
 						</div>
-					</div>
-					<div class="product-body">
-						<p class="product-category">@product.Category</p>
-						<h3 class="product-name"><a href="#">@product.Name</a></h3>
-						<h4 class="product-price">$@product.Price</h4>
+						<div class="product-body">
+							<p class="product-category">@product.Categories.First().Name</p>
+							<h3 class="product-name"><a href="/ProductInfo/@product.ProductId">@product.Name</a></h3>
+							<h4 class="product-price">$@product.Price</h4>
+						</div>
+					</a>
 
-						<div class="product-btns">
-							<button class="add-to-wishlist"><i class="fa fa-heart-o"></i><span class="tooltipp">add to wishlist</span></button>
-							<button class="quick-view"><i class="fa fa-eye"></i><span class="tooltipp">quick view</span></button>
-						</div>
-					</div>
-					<div class="add-to-cart">
-						<button class="add-to-cart-btn"><i class="fa fa-shopping-cart"></i> add to cart</button>
+					<!-- Добавляем кнопку "Удалить" -->
+					<div class="product-delete-button" >
+						<form method="post" asp-page-handler="DeleteProduct" asp-route-productId="@product.ProductId">
+							<button type="submit" class="btn btn-danger">Удалить</button>
+						</form>
 					</div>
 				</div>
-			</a>
-		</div>
-    }
-</div>
+			</div>
+		}
+	</div>
+</body>
 
+
+</html>
+<script src="js/jquery.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/slick.min.js"></script>
+<script src="js/nouislider.min.js"></script>
+<script src="js/jquery.zoom.min.js"></script>
+<script src="js/main.js"></script>
