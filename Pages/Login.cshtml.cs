@@ -49,9 +49,9 @@ public class LoginModel : PageModel
         }
         else
         {
-            // Ошибка аутентификации
-            ModelState.AddModelError(string.Empty, "Invalid email or password.");
-        }
+			// Ошибка аутентификации
+			ViewData["Message"] = string.Format($"Error. Wrong email or passwoed");
+		}
         return Page();
     }
 }

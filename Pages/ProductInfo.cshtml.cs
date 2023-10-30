@@ -83,18 +83,22 @@ namespace Marketplace_Web.Pages
 			.Where(p => p.Categories.Any(c => c.CategoryId == categoryId))
 			.Take(5)
 			.ToListAsync();
-		public async Task<IActionResult> OnPostAddToCartAsync(int productId)
+		public async Task OnPostAddToCartAsync(int productId)
 		{
-
-			var userId = HttpContext.Session.GetInt32("UserId");
-			var user = await _context.Users.FindAsync(userId);
-			if (user == null)
-				return RedirectToPage("/Login");
-			var product = await _context.Products.FindAsync(productId);
-			user.ProductsNavigation.Add(product);
-			product.UsersNavigation.Add(user);
-			await _context.SaveChangesAsync();
-			return RedirectToPage("/ProductInfo", new { productId });
+			try
+			{
+				var userId = HttpContext.Session.GetInt32("UserId");
+				var user = await _context.Users.FindAsync(userId);
+				if (user == null)
+					RedirectToPage("/Login");
+				var product = await _context.Products.FindAsync(productId);
+				user.ProductsNavigation.Add(product);
+				product.UsersNavigation.Add(user);
+				await _context.SaveChangesAsync();
+				ViewData["Message"] = string.Format($"Product added");
+			}
+			catch { ViewData["Message"] = string.Format($"Error"); }
+			await OnGetAsync(productId);
 		}
 
 

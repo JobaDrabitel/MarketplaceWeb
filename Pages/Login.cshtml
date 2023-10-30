@@ -104,7 +104,14 @@
 								<button type="submit" class="search-btn">Search</button>
 							</form>
 						</div>
-
+						@if (ViewData["Message"] != null)
+						{
+							<script type="text/javascript">
+								window.onload = function () {
+									alert("@ViewData["Message"]");
+								};
+							</script>
+						}
 					</div>
 					<!-- /SEARCH BAR -->
 					<!-- ACCOUNT -->
